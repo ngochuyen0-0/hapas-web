@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password_hash String
+  full_name     String
+  role          String    @default("staff")
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+}
+
+model Customer {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password_hash String
+  full_name     String
+  phone         String?
+  address       String?
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+  orders        Order[]
+  reviews       Review[]
+  wishlists     Wishlist[]
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  description String?
+  image_url   String?
+  is_active   Boolean   @default(true)
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  products    Product[]
+}
+
+model Product {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  price       Decimal
+  category_id String
+  brand       String?
+  material    String?
+  color       String?
+  size        String?
+  image_urls  String?
+  is_active   Boolean   @default(true)
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  category    Category  @relation(fields: [category_id], references: [id])
+  order_items OrderItem[]
+  reviews     Review[]
+  wishlists   Wishlist[]
+  inventories Inventory[]
+}
+
+model Inventory {
+  id               String   @id @default(uuid())
+  product_id       String
+  quantity         Int
+  reserved_quantity Int      @default(0)
+  location         String?
+  last_updated     DateTime @default(now())
+  product          Product  @relation(fields: [product_id], references: [id])
+}
+
+model Order {
+  id              String      @id @default(uuid())
+  customer_id     String
+  status          String      @default("pending")
+  total_amount    Decimal
+  shipping_address String?
+  billing_address  String?
+  order_date      DateTime    @default(now())
+  shipped_date    DateTime?
+  delivered_date  DateTime?
+  created_at      DateTime    @default(now())
+  updated_at      DateTime    @updatedAt
+  customer        Customer    @relation(fields: [customer_id], references: [id])
+  order_items     OrderItem[]
+  payment         Payment?
+}
+
+model OrderItem {
+  id         String   @id @default(uuid())
+  order_id   String
+  product_id String
+  quantity   Int
+  unit_price Decimal
+  total_price Decimal
+  order      Order    @relation(fields: [order_id], references: [id])
+  product    Product  @relation(fields: [product_id], references: [id])
+}
+
+model Payment {
+  id             String   @id @default(uuid())
+  order_id       String   @unique
+  payment_method String
+  transaction_id String?
+  status         String   @default("pending")
+  amount         Decimal
+  payment_date   DateTime @default(now())
+  order          Order    @relation(fields: [order_id], references: [id])
+}
+
+model Review {
+  id                  String   @id @default(uuid())
+  customer_id         String
+  product_id          String
+  rating              Int
+  comment             String?
+  is_verified_purchase Boolean  @default(false)
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+  customer            Customer @relation(fields: [customer_id], references: [id])
+  product             Product  @relation(fields: [product_id], references: [id])
+}
+
+model Wishlist {
+  id          String   @id @default(uuid())
+  customer_id String
+  product_id  String
+  added_at    DateTime @default(now())
+  customer    Customer @relation(fields: [customer_id], references: [id])
+  product     Product  @relation(fields: [product_id], references: [id])
+}
+
+model Promotion {
+  id             String   @id @default(uuid())
+  name           String
+  description    String?
+  discount_type  String
+  discount_value Decimal
+  start_date     DateTime
+  end_date       DateTime
+  is_active      Boolean  @default(true)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+}
