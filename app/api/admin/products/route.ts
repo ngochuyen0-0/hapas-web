@@ -52,7 +52,7 @@ export const POST = withAdminAuth(async (req: Request) => {
     }
 
     const body = await req.json();
-    const { name, description, price, category_id, brand, material, color, size, image_urls } = body;
+    const { name, description, price, category_id, brand, material, color, size, image_urls, initial_stock_quantity } = body;
 
     // Validate required fields
     if (!name || !price || !category_id) {
@@ -82,7 +82,7 @@ export const POST = withAdminAuth(async (req: Request) => {
     await prisma.inventory.create({
       data: {
         product_id: product.id,
-        quantity: 0,
+        quantity: initial_stock_quantity || 0,
         reserved_quantity: 0
       }
     });

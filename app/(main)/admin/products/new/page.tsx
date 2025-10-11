@@ -10,8 +10,31 @@ import { useRouter } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 
+interface Category {
+  id: string;
+ name: string;
+ description: string | null;
+  image_url: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+interface ProductFormData {
+  name: string;
+  description: string;
+    price: string;
+  category_id: string;
+  brand: string;
+ material: string;
+ color: string;
+ size: string;
+    image_urls: string;
+  is_active: boolean;
+  initial_stock_quantity: number;
+}
 export default function NewProductPage() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ProductFormData>({
     name: '',
     description: '',
     price: '',
@@ -21,9 +44,10 @@ export default function NewProductPage() {
     color: '',
     size: '',
     image_urls: '',
-    is_active: true
+    is_active: true,
+    initial_stock_quantity: 0
   });
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
@@ -34,7 +58,7 @@ export default function NewProductPage() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('/api/categories');
+      const response = await fetch('/api/public/categories');
       const data = await response.json();
       if (data.success) {
         setCategories(data.categories);
@@ -42,7 +66,7 @@ export default function NewProductPage() {
     } catch (error) {
       console.error('Lỗi khi tải danh mục:', error);
     }
-  };
+ };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -50,7 +74,7 @@ export default function NewProductPage() {
     
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : (name === 'initial_stock_quantity' ? parseInt(value) || 0 : (type === 'number' ? parseFloat(value) || 0 : value))
     }));
   };
 
@@ -69,7 +93,8 @@ export default function NewProductPage() {
         },
         body: JSON.stringify({
           ...formData,
-          price: parseFloat(formData.price)
+          price: parseFloat(formData.price),
+          initial_stock_quantity: parseInt(formData.initial_stock_quantity.toString()) || 0
         })
       });
 
@@ -97,9 +122,10 @@ export default function NewProductPage() {
         </p>
       </div>
 
+      {/* Thông tin cơ bản */}
       <Card>
         <CardHeader>
-          <CardTitle>Thông Tin Sản Phẩm</CardTitle>
+          <CardTitle>Thông tin cơ bản</CardTitle>
         </CardHeader>
         <CardContent>
           {error && (
@@ -119,6 +145,7 @@ export default function NewProductPage() {
                   value={formData.name}
                   onChange={handleChange}
                   required
+                  placeholder="Nhập tên sản phẩm"
                 />
               </div>
               
@@ -132,6 +159,7 @@ export default function NewProductPage() {
                   value={formData.price}
                   onChange={handleChange}
                   required
+                  placeholder="0.00"
                 />
               </div>
               
@@ -142,11 +170,11 @@ export default function NewProductPage() {
                   name="category_id"
                   value={formData.category_id}
                   onChange={handleChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
+                  className="w-full p-2 border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                   required
                 >
                   <option value="">Chọn danh mục</option>
-                  {categories.map((category: any) => (
+                  {categories.map((category: Category) => (
                     <option key={category.id} value={category.id}>
                       {category.name}
                     </option>
@@ -161,9 +189,22 @@ export default function NewProductPage() {
                   name="brand"
                   value={formData.brand}
                   onChange={handleChange}
+                  placeholder="Nhập thương hiệu"
                 />
               </div>
-              
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+      
+      {/* Thông tin chi tiết */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Thông tin chi tiết</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="material">Chất Liệu</Label>
                 <Input
@@ -171,6 +212,7 @@ export default function NewProductPage() {
                   name="material"
                   value={formData.material}
                   onChange={handleChange}
+                  placeholder="Ví dụ: Da, Vải..."
                 />
               </div>
               
@@ -181,6 +223,7 @@ export default function NewProductPage() {
                   name="color"
                   value={formData.color}
                   onChange={handleChange}
+                  placeholder="Ví dụ: Đen, Trắng..."
                 />
               </div>
               
@@ -191,24 +234,8 @@ export default function NewProductPage() {
                   name="size"
                   value={formData.size}
                   onChange={handleChange}
+                  placeholder="Ví dụ: S, M, L..."
                 />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="is_active">Trạng Thái</Label>
-                <div className="flex items-center">
-                  <input
-                    id="is_active"
-                    name="is_active"
-                    type="checkbox"
-                    checked={formData.is_active}
-                    onChange={handleChange}
-                    className="h-4 w-4 text-primary"
-                  />
-                  <Label htmlFor="is_active" className="ml-2">
-                    Kích Hoạt
-                  </Label>
-                </div>
               </div>
             </div>
             
@@ -220,9 +247,52 @@ export default function NewProductPage() {
                 value={formData.description}
                 onChange={handleChange}
                 rows={4}
+                placeholder="Mô tả chi tiết về sản phẩm..."
               />
             </div>
-            
+          </form>
+        </CardContent>
+      </Card>
+      
+      {/* Kho và hình ảnh */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Kho và hình ảnh</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="initial_stock_quantity">Số Lượng Kho Ban Đầu</Label>
+                <Input
+                  id="initial_stock_quantity"
+                  name="initial_stock_quantity"
+                  type="number"
+                  min="0"
+                  value={formData.initial_stock_quantity}
+                  onChange={handleChange}
+                  placeholder="0"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="is_active">Trạng Thái</Label>
+                <div className="flex items-center pt-2">
+                  <input
+                    id="is_active"
+                    name="is_active"
+                    type="checkbox"
+                    checked={formData.is_active}
+                    onChange={handleChange}
+                    className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                  />
+                  <Label htmlFor="is_active" className="ml-2 font-normal">
+                    Kích Hoạt
+                  </Label>
+                </div>
+              </div>
+            </div>
+          
             <div className="space-y-2">
               <Label htmlFor="image_urls">URL Hình Ảnh (phân tách bằng dấu phẩy)</Label>
               <Textarea
@@ -235,7 +305,7 @@ export default function NewProductPage() {
               />
             </div>
             
-            <div className="flex justify-end space-x-4">
+            <div className="flex justify-end space-x-4 pt-4">
               <Button
                 type="button"
                 variant="outline"

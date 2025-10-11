@@ -100,7 +100,7 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const { name, description, price, category_id, brand, material, color, size, image_urls, is_active } = body;
+    const { name, description, price, category_id, brand, material, color, size, image_urls, is_active, inventory_quantity } = body;
 
     // Validate required fields
     if (!name || price === undefined || !category_id) {
@@ -126,6 +126,28 @@ export async function PUT(
         is_active
       }
     });
+    
+    // Update inventory if provided
+    if (inventory_quantity !== undefined) {
+      const existingInventory = await prisma.inventory.findFirst({
+        where: { product_id: id }
+      });
+      
+      if (existingInventory) {
+        await prisma.inventory.update({
+          where: { id: existingInventory.id },
+          data: { quantity: inventory_quantity }
+        });
+      } else {
+        await prisma.inventory.create({
+          data: {
+            product_id: id,
+            quantity: inventory_quantity,
+            reserved_quantity: 0
+          }
+        });
+      }
+    }
 
     return NextResponse.json({
       success: true,
