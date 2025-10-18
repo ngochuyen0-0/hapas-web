@@ -13,21 +13,24 @@ export async function GET(req: Request) {
 
     if (!query && !categoryId) {
       return NextResponse.json(
-        { success: false, message: 'Query parameter "q" or "category_id" is required' },
-        { status: 400 }
+        {
+          success: false,
+          message: 'Query parameter "q" or "category_id" is required',
+        },
+        { status: 400 },
       );
     }
 
     // Build where clause
     const where: any = { is_active: true };
-    
+
     if (query) {
       where.name = {
         contains: query,
-        mode: 'insensitive' // Case-insensitive search
+        mode: 'insensitive', // Case-insensitive search
       };
     }
-    
+
     if (categoryId) {
       where.category_id = categoryId;
     }
@@ -41,10 +44,10 @@ export async function GET(req: Request) {
       include: {
         category: {
           select: {
-            name: true
-          }
-        }
-      }
+            name: true,
+          },
+        },
+      },
     });
 
     // Get total count for pagination
@@ -57,14 +60,14 @@ export async function GET(req: Request) {
         page,
         limit,
         total,
-        totalPages: Math.ceil(total / limit)
-      }
+        totalPages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
     console.error('Error searching products:', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

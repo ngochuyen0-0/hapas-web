@@ -7,18 +7,21 @@ export const GET = withAdminAuth(async (req: Request) => {
   try {
     // Test database connection
     await prisma.$connect();
-    
-    return NextResponse.json({ 
-      success: true, 
+
+    return NextResponse.json({
+      success: true,
       message: 'Database connection successful',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   } catch (error) {
     console.error('Database connection error:', error);
-    return NextResponse.json({ 
-      success: false, 
-      message: 'Database connection failed',
-      error: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        message: 'Database connection failed',
+        error: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 },
+    );
   }
 });

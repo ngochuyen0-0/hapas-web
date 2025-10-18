@@ -5,7 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle, Package, Tag, DollarSign, Palette, Ruler } from 'lucide-react';
+import {
+  AlertCircle,
+  Package,
+  Tag,
+  DollarSign,
+  Palette,
+  Ruler,
+} from 'lucide-react';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -16,7 +23,7 @@ export default function ViewProductPage({ params }: Props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const router = useRouter();
-  const {id: productId} = use(params);
+  const { id: productId } = use(params);
 
   useEffect(() => {
     if (productId) {
@@ -31,25 +38,27 @@ export default function ViewProductPage({ params }: Props) {
     try {
       setLoading(true);
       setError('');
-      
+
       const token = localStorage.getItem('adminToken');
       if (!token) {
         router.push('/login');
         return;
       }
-      
+
       const response = await fetch(`/api/admin/products/${productId}`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
-        throw new Error(data.message || `Lỗi HTTP! trạng thái: ${response.status}`);
+        throw new Error(
+          data.message || `Lỗi HTTP! trạng thái: ${response.status}`,
+        );
       }
-      
+
       if (data.success) {
         setProduct(data.product);
       } else {
@@ -105,7 +114,13 @@ export default function ViewProductPage({ params }: Props) {
           <div className="flex justify-between items-start">
             <CardTitle>{product.name}</CardTitle>
             <div className="flex space-x-2">
-              <Button onClick={() => router.push(`/admin/products/${product.id}/edit`)}>Chỉnh sửa</Button>
+              <Button
+                onClick={() =>
+                  router.push(`/admin/products/${product.id}/edit`)
+                }
+              >
+                Chỉnh sửa
+              </Button>
             </div>
           </div>
         </CardHeader>
@@ -121,8 +136,8 @@ export default function ViewProductPage({ params }: Props) {
                     if (imageUrls.startsWith('data:image/')) {
                       // Single base64 image
                       return (
-                        <img 
-                          src={imageUrls} 
+                        <img
+                          src={imageUrls}
                           alt={`${product.name} - Hình ảnh`}
                           className="w-full h-64 object-cover rounded-xl border"
                         />
@@ -131,26 +146,31 @@ export default function ViewProductPage({ params }: Props) {
                     // Check if it contains multiple images (URLs separated by commas)
                     else if (imageUrls.includes('http')) {
                       // Multiple URL images separated by commas
-                      return imageUrls.split(',').map((url: string, index: number) => {
-                        const trimmedUrl = url.trim();
-                        return trimmedUrl ? (
-                          <img 
-                            key={index}
-                            src={trimmedUrl} 
-                            alt={`${product.name} - Hình ảnh ${index + 1}`}
-                            className="w-full h-64 object-cover rounded-xl border"
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement;
-                              target.src = 'https://placehold.co/400x400?text=Hình+ảnh+lỗi';
-                            }}
-                          />
-                        ) : null;
-                      });
+                      return imageUrls
+                        .split(',')
+                        .map((url: string, index: number) => {
+                          const trimmedUrl = url.trim();
+                          return trimmedUrl ? (
+                            <img
+                              key={index}
+                              src={trimmedUrl}
+                              alt={`${product.name} - Hình ảnh ${index + 1}`}
+                              className="w-full h-64 object-cover rounded-xl border"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.src =
+                                  'https://placehold.co/400x400?text=Hình+ảnh+lỗi';
+                              }}
+                            />
+                          ) : null;
+                        });
                     }
                     // Fallback for any other case
                     return (
                       <div className="bg-gray-200 border-2 border-dashed rounded-xl w-full h-64 flex items-center justify-center">
-                        <span className="text-gray-500">Không có hình ảnh hợp lệ</span>
+                        <span className="text-gray-500">
+                          Không có hình ảnh hợp lệ
+                        </span>
                       </div>
                     );
                   })()}
@@ -161,24 +181,31 @@ export default function ViewProductPage({ params }: Props) {
                 </div>
               )}
             </div>
-            
+
             <div className="space-y-4">
               <div className="flex items-center">
                 <DollarSign className="h-5 w-5 text-gray-500 mr-2" />
                 <div>
                   <p className="text-sm text-gray-500">Giá</p>
-                  <p className="font-medium">đ{typeof product.price === 'number' ? product.price.toFixed(2) : parseFloat(product.price).toFixed(2)}</p>
+                  <p className="font-medium">
+                    đ
+                    {typeof product.price === 'number'
+                      ? product.price.toFixed(2)
+                      : parseFloat(product.price).toFixed(2)}
+                  </p>
                 </div>
               </div>
-              
+
               <div className="flex items-center">
                 <Tag className="h-5 w-5 text-gray-500 mr-2" />
                 <div>
                   <p className="text-sm text-gray-500">Danh mục</p>
-                  <p className="font-medium">{product.category?.name || 'N/A'}</p>
+                  <p className="font-medium">
+                    {product.category?.name || 'N/A'}
+                  </p>
                 </div>
               </div>
-              
+
               <div className="flex items-center">
                 <Package className="h-5 w-5 text-gray-500 mr-2" />
                 <div>
@@ -186,7 +213,7 @@ export default function ViewProductPage({ params }: Props) {
                   <p className="font-medium">{inventory.quantity} sản phẩm</p>
                 </div>
               </div>
-              
+
               <div className="flex items-center">
                 <Palette className="h-5 w-5 text-gray-500 mr-2" />
                 <div>
@@ -194,7 +221,7 @@ export default function ViewProductPage({ params }: Props) {
                   <p className="font-medium">{product.color || 'N/A'}</p>
                 </div>
               </div>
-              
+
               <div className="flex items-center">
                 <Ruler className="h-5 w-5 text-gray-500 mr-2" />
                 <div>
@@ -202,15 +229,19 @@ export default function ViewProductPage({ params }: Props) {
                   <p className="font-medium">{product.size || 'N/A'}</p>
                 </div>
               </div>
-              
+
               <div>
                 <p className="text-sm text-gray-500">Mô tả</p>
-                <p className="mt-1">{product.description || 'Không có mô tả'}</p>
+                <p className="mt-1">
+                  {product.description || 'Không có mô tả'}
+                </p>
               </div>
-              
+
               <div>
                 <p className="text-sm text-gray-500">Trạng thái</p>
-                <p className={`mt-1 font-medium ${product.is_active ? 'text-green-600' : 'text-red-600'}`}>
+                <p
+                  className={`mt-1 font-medium ${product.is_active ? 'text-green-600' : 'text-red-600'}`}
+                >
                   {product.is_active ? 'Hoạt động' : 'Ngừng hoạt động'}
                 </p>
               </div>

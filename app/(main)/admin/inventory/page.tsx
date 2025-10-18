@@ -4,7 +4,14 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Search, Plus, Edit, AlertTriangle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -52,7 +59,9 @@ interface InventoryItemWithProduct extends InventoryItem {
 }
 
 export default function InventoryPage() {
-  const [inventoryItems, setInventoryItems] = useState<InventoryItemWithProduct[]>([]);
+  const [inventoryItems, setInventoryItems] = useState<
+    InventoryItemWithProduct[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
@@ -67,18 +76,18 @@ export default function InventoryPage() {
       // Fetch products which include inventory information
       const response = await fetch('/api/admin/products', {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      
+
       const data = await response.json();
       if (data.success) {
         // Transform the data to match our inventory structure
-        const inventoryData = data.products.flatMap((product: Product) => 
+        const inventoryData = data.products.flatMap((product: Product) =>
           product.inventories.map((inventory: InventoryItem) => ({
             ...inventory,
-            product: product
-          }))
+            product: product,
+          })),
         );
         setInventoryItems(inventoryData);
       }
@@ -89,16 +98,19 @@ export default function InventoryPage() {
     }
   };
 
-  const handleUpdateStock = async (inventoryId: string, newQuantity: number) => {
+  const handleUpdateStock = async (
+    inventoryId: string,
+    newQuantity: number,
+  ) => {
     try {
       const token = localStorage.getItem('adminToken');
       const response = await fetch(`/api/admin/inventory/${inventoryId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ quantity: newQuantity })
+        body: JSON.stringify({ quantity: newQuantity }),
       });
 
       const data = await response.json();
@@ -114,9 +126,12 @@ export default function InventoryPage() {
     }
   };
 
-  const filteredInventory = inventoryItems.filter(item => 
-    item.product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.product.category.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredInventory = inventoryItems.filter(
+    (item) =>
+      item.product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.product.category.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -164,17 +179,22 @@ export default function InventoryPage() {
                 {filteredInventory.map((item) => {
                   const available = item.quantity - item.reserved_quantity;
                   const isLowStock = available <= 5;
-                  
+
                   return (
                     <TableRow key={item.id}>
-                      <TableCell className="font-medium">{item.product.name}</TableCell>
+                      <TableCell className="font-medium">
+                        {item.product.name}
+                      </TableCell>
                       <TableCell>{item.product.category.name}</TableCell>
                       <TableCell>{item.quantity}</TableCell>
                       <TableCell>{item.reserved_quantity}</TableCell>
                       <TableCell>{available}</TableCell>
                       <TableCell>
                         {isLowStock ? (
-                          <Badge variant="destructive" className="flex items-center">
+                          <Badge
+                            variant="destructive"
+                            className="flex items-center"
+                          >
                             <AlertTriangle className="h-3 w-3 mr-1" />
                             Low Stock
                           </Badge>
@@ -183,10 +203,12 @@ export default function InventoryPage() {
                         )}
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          onClick={() => router.push(`/admin/inventory/${item.id}/edit`)}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            router.push(`/admin/inventory/${item.id}/edit`)
+                          }
                         >
                           <Edit className="h-4 w-4" />
                         </Button>

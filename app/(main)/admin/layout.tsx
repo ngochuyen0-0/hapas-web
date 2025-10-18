@@ -3,17 +3,17 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { 
-  LayoutDashboard, 
-  Package, 
-  ShoppingCart, 
-  Users, 
-  BarChart, 
+import {
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  Users,
+  BarChart,
   Settings,
   LogOut,
   Menu,
   X,
-  Tag
+  Tag,
 } from 'lucide-react';
 
 export default function AdminLayout({
@@ -76,7 +76,7 @@ export default function AdminLayout({
       </div>
 
       {/* Sidebar */}
-      <div 
+      <div
         className={`fixed inset-y-0 left-0 z-20 bg-white shadow-lg transform ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0 lg:static lg:inset-0 w-64 transition-transform duration-300 ease-in-out`}
@@ -119,7 +119,9 @@ export default function AdminLayout({
                   {user.email?.charAt(0).toUpperCase()}
                 </div>
                 <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-900">{user.full_name}</p>
+                  <p className="text-sm font-medium text-gray-900">
+                    {user.full_name}
+                  </p>
                   <p className="text-xs text-gray-500">{user.role}</p>
                 </div>
               </div>
@@ -139,16 +141,14 @@ export default function AdminLayout({
       <div className="flex-1 overflow-y-auto">
         <main className="pt-16 lg:pt-0">
           <div className="py-6">
-            <div className="px-4 sm:px-6 lg:px-8">
-              {children}
-            </div>
+            <div className="px-4 sm:px-6 lg:px-8">{children}</div>
           </div>
         </main>
       </div>
 
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-10 bg-black bg-opacity-50 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         ></div>

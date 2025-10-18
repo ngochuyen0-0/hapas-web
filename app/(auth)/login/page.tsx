@@ -59,7 +59,9 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-md">
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">Đăng Nhập Quản Trị</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center">
+              Đăng Nhập Quản Trị
+            </CardTitle>
             <p className="text-sm text-center text-gray-500">
               Đăng nhập vào tài khoản quản trị Hapas của bạn
             </p>
@@ -72,7 +74,7 @@ export default function AdminLoginPage() {
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
-              
+
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -84,7 +86,7 @@ export default function AdminLoginPage() {
                   required
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="password">Mật Khẩu</Label>
                 <Input
@@ -96,12 +98,8 @@ export default function AdminLoginPage() {
                   required
                 />
               </div>
-              
-              <Button 
-                type="submit" 
-                className="w-full" 
-                disabled={loading}
-              >
+
+              <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? 'Đang đăng nhập...' : 'Đăng Nhập'}
               </Button>
             </form>

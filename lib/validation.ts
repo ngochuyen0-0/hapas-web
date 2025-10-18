@@ -4,7 +4,6 @@ export const validateEmail = (email: string): boolean => {
 };
 
 export const validatePassword = (password: string): boolean => {
-  // At least 8 characters, one uppercase, one lowercase, one number
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,}$/;
   return passwordRegex.test(password);
 };
@@ -58,12 +57,18 @@ export const validateOrderData = (data: any): string[] => {
       if (!validateRequired(item.product_id)) {
         errors.push('Product ID is required for each item');
       }
-      
-      if (!validateRequired(item.quantity) || !validatePositiveNumber(item.quantity)) {
+
+      if (
+        !validateRequired(item.quantity) ||
+        !validatePositiveNumber(item.quantity)
+      ) {
         errors.push('Quantity must be a positive number');
       }
-      
-      if (!validateRequired(item.unit_price) || !validatePositiveNumber(item.unit_price)) {
+
+      if (
+        !validateRequired(item.unit_price) ||
+        !validatePositiveNumber(item.unit_price)
+      ) {
         errors.push('Unit price must be a positive number');
       }
     }
@@ -76,20 +81,19 @@ export const validateCustomerData = (data: any): string[] => {
   const errors: string[] = [];
 
   if (!validateRequired(data.full_name)) {
-    errors.push('Full name is required');
+    errors.push('Họ tên không được để trống');
   }
 
   if (!validateRequired(data.email)) {
-    errors.push('Email is required');
+    errors.push('Email không được để trống');
   } else if (!validateEmail(data.email)) {
-    errors.push('Email is invalid');
+    errors.push('Email không đúng định dạng');
   }
 
   if (!validateRequired(data.password)) {
-    errors.push('Password is required');
+    errors.push('Mật khẩu không được để trống');
   } else if (!validatePassword(data.password)) {
-    errors.push('Password must be at least 8 characters with uppercase, lowercase, and number');
+    errors.push('Mật khẩu phải có 8 ký tự bao gồm chữ hoa, chữ thường và số');
   }
-
   return errors;
 };

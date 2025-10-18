@@ -25,10 +25,10 @@ export async function GET(req: Request) {
       include: {
         category: {
           select: {
-            name: true
-          }
-        }
-      }
+            name: true,
+          },
+        },
+      },
     });
 
     // Get total count for pagination
@@ -41,14 +41,14 @@ export async function GET(req: Request) {
         page,
         limit,
         total,
-        totalPages: Math.ceil(total / limit)
-      }
+        totalPages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
     console.error('Error fetching products:', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

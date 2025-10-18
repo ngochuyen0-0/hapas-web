@@ -4,9 +4,23 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { AlertCircle, User, Mail, Phone, MapPin, ShoppingCart } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
+  AlertCircle,
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  ShoppingCart,
+} from 'lucide-react';
 
 export default function ViewCustomerPage() {
   const [customer, setCustomer] = useState<any>(null);
@@ -27,10 +41,10 @@ export default function ViewCustomerPage() {
       const token = localStorage.getItem('adminToken');
       const response = await fetch(`/api/admin/customers/${customerId}`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      
+
       const data = await response.json();
       if (data.success) {
         setCustomer(data.customer);
@@ -97,14 +111,21 @@ export default function ViewCustomerPage() {
                 Personal Information
               </h3>
               <div className="space-y-2">
-                <p><span className="font-medium">Name:</span> {customer.full_name}</p>
-                <p><span className="font-medium">Email:</span> {customer.email}</p>
+                <p>
+                  <span className="font-medium">Name:</span>{' '}
+                  {customer.full_name}
+                </p>
+                <p>
+                  <span className="font-medium">Email:</span> {customer.email}
+                </p>
                 {customer.phone && (
-                  <p><span className="font-medium">Phone:</span> {customer.phone}</p>
+                  <p>
+                    <span className="font-medium">Phone:</span> {customer.phone}
+                  </p>
                 )}
               </div>
             </div>
-            
+
             <div>
               <h3 className="text-lg font-medium mb-4 flex items-center">
                 <MapPin className="h-5 w-5 mr-2" />
@@ -118,20 +139,29 @@ export default function ViewCustomerPage() {
                 )}
               </div>
             </div>
-            
+
             <div>
               <h3 className="text-lg font-medium mb-4 flex items-center">
                 <ShoppingCart className="h-5 w-5 mr-2" />
                 Order Summary
               </h3>
               <div className="space-y-2">
-                <p><span className="font-medium">Total Orders:</span> {customer.orders_count || 0}</p>
-                <p><span className="font-medium">Total Spent:</span> ${(customer.total_spent || 0).toFixed(2)}</p>
-                <p><span className="font-medium">Member Since:</span> {new Date(customer.created_at).toLocaleDateString()}</p>
+                <p>
+                  <span className="font-medium">Total Orders:</span>{' '}
+                  {customer.orders_count || 0}
+                </p>
+                <p>
+                  <span className="font-medium">Total Spent:</span> $
+                  {(customer.total_spent || 0).toFixed(2)}
+                </p>
+                <p>
+                  <span className="font-medium">Member Since:</span>{' '}
+                  {new Date(customer.created_at).toLocaleDateString()}
+                </p>
               </div>
             </div>
           </div>
-          
+
           <div className="mt-8">
             <h3 className="text-lg font-medium mb-4">Recent Orders</h3>
             {customer.recent_orders && customer.recent_orders.length > 0 ? (
@@ -147,13 +177,22 @@ export default function ViewCustomerPage() {
                 <TableBody>
                   {customer.recent_orders.map((order: any) => (
                     <TableRow key={order.id}>
-                      <TableCell className="font-medium">#{order.id.substring(0, 8)}</TableCell>
-                      <TableCell>{new Date(order.order_date).toLocaleDateString()}</TableCell>
+                      <TableCell className="font-medium">
+                        #{order.id.substring(0, 8)}
+                      </TableCell>
                       <TableCell>
-                        <Badge variant={
-                          order.status === 'completed' ? 'default' :
-                          order.status === 'pending' ? 'destructive' : 'secondary'
-                        }>
+                        {new Date(order.order_date).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            order.status === 'completed'
+                              ? 'default'
+                              : order.status === 'pending'
+                                ? 'destructive'
+                                : 'secondary'
+                          }
+                        >
                           {order.status}
                         </Badge>
                       </TableCell>

@@ -2,28 +2,32 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  Package, 
-  ShoppingCart, 
-  DollarSign, 
+import {
+  Package,
+  ShoppingCart,
+  DollarSign,
   Users,
   TrendingUp,
   TrendingDown,
   BarChart3,
-  PieChart as LucidePieChart
+  PieChart as LucidePieChart,
 } from 'lucide-react';
-import { 
-  LineChart, 
-  Line, 
-  BarChart, 
-  Bar, 
-  PieChart, 
-  Pie, 
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
   Cell,
   Tooltip,
-  ResponsiveContainer
+  ResponsiveContainer,
 } from 'recharts';
-import { fetchDashboardStats, fetchSalesData, fetchCategoryData } from '@/lib/api';
+import {
+  fetchDashboardStats,
+  fetchSalesData,
+  fetchCategoryData,
+} from '@/lib/api';
 
 // Define types for our data
 interface SalesDataPoint {
@@ -61,22 +65,24 @@ export default function ReportsPage() {
     totalCustomers: 0,
   });
 
-  const [salesData, setSalesData] = useState<SalesDataPoint[]>(defaultSalesData);
-  const [categoryData, setCategoryData] = useState<CategoryDataPoint[]>(defaultCategoryData);
+  const [salesData, setSalesData] =
+    useState<SalesDataPoint[]>(defaultSalesData);
+  const [categoryData, setCategoryData] =
+    useState<CategoryDataPoint[]>(defaultCategoryData);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        
+
         // Fetch all data in parallel
         const [statsData, salesData, categoryData] = await Promise.all([
           fetchDashboardStats(),
           fetchSalesData(),
-          fetchCategoryData()
+          fetchCategoryData(),
         ]);
-        
+
         setStats(statsData);
         setSalesData(salesData);
         setCategoryData(categoryData);
@@ -92,14 +98,22 @@ export default function ReportsPage() {
   }, []);
 
   // Type for the label function parameters
-  const formatPieLabel = ({ name, percent }: { name: string; percent: number }) => {
+  const formatPieLabel = ({
+    name,
+    percent,
+  }: {
+    name: string;
+    percent: number;
+  }) => {
     return `${name}: ${(percent * 100).toFixed(0)}%`;
   };
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Báo Cáo & Phân Tích</h1>
+        <h1 className="text-2xl font-bold text-gray-900">
+          Báo Cáo & Phân Tích
+        </h1>
         <p className="mt-1 text-sm text-gray-500">
           Thông tin chi tiết và phân tích cho cửa hàng của bạn
         </p>
@@ -114,10 +128,12 @@ export default function ReportsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalProducts}</div>
-            <p className="text-xs text-muted-foreground">+12% so với tháng trước</p>
+            <p className="text-xs text-muted-foreground">
+              +12% so với tháng trước
+            </p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Tổng Đơn Hàng</CardTitle>
@@ -125,29 +141,41 @@ export default function ReportsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalOrders}</div>
-            <p className="text-xs text-muted-foreground">+8% so với tháng trước</p>
+            <p className="text-xs text-muted-foreground">
+              +8% so với tháng trước
+            </p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Tổng Doanh Thu</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Tổng Doanh Thu
+            </CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${stats.totalRevenue.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">+15% so với tháng trước</p>
+            <div className="text-2xl font-bold">
+              ${stats.totalRevenue.toFixed(2)}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              +15% so với tháng trước
+            </p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Tổng Khách Hàng</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Tổng Khách Hàng
+            </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalCustomers}</div>
-            <p className="text-xs text-muted-foreground">+5% so với tháng trước</p>
+            <p className="text-xs text-muted-foreground">
+              +5% so với tháng trước
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -167,11 +195,11 @@ export default function ReportsPage() {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={salesData}>
                   <Tooltip />
-                  <Line 
-                    type="monotone" 
-                    dataKey="sales" 
-                    stroke="#8884d8" 
-                    activeDot={{ r: 8 }} 
+                  <Line
+                    type="monotone"
+                    dataKey="sales"
+                    stroke="#8884d8"
+                    activeDot={{ r: 8 }}
                     strokeWidth={2}
                   />
                 </LineChart>
@@ -193,11 +221,7 @@ export default function ReportsPage() {
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={salesData}>
                   <Tooltip />
-                  <Bar 
-                    dataKey="orders" 
-                    fill="#82ca9d" 
-                    radius={4}
-                  />
+                  <Bar dataKey="orders" fill="#82ca9d" radius={4} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -227,7 +251,10 @@ export default function ReportsPage() {
                     dataKey="value"
                   >
                     {categoryData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
                     ))}
                   </Pie>
                   <Tooltip />

@@ -12,29 +12,32 @@ export async function POST(request: Request) {
     if (!email || !password) {
       return NextResponse.json(
         { success: false, message: 'Email and password are required' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Find customer
     const customer = await prisma.customer.findUnique({
-      where: { email }
+      where: { email },
     });
 
     if (!customer) {
       return NextResponse.json(
         { success: false, message: 'Invalid credentials' },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
     // Check password
-    const isPasswordValid = await comparePassword(password, customer.password_hash);
-    
+    const isPasswordValid = await comparePassword(
+      password,
+      customer.password_hash,
+    );
+
     if (!isPasswordValid) {
       return NextResponse.json(
         { success: false, message: 'Invalid credentials' },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -49,14 +52,16 @@ export async function POST(request: Request) {
       user: {
         id: customer.id,
         email: customer.email,
-        full_name: customer.full_name
-      }
+        full_name: customer.full_name,
+        phone: customer.phone,
+        address: customer.address,
+      },
     });
   } catch (error) {
     console.error('Customer login error:', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

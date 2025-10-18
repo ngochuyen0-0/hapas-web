@@ -4,7 +4,14 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Search, Eye } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -36,10 +43,10 @@ export default function CustomersPage() {
       const token = localStorage.getItem('adminToken');
       const response = await fetch('/api/admin/customers', {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      
+
       const data = await response.json();
       if (data.success) {
         setCustomers(data.customers);
@@ -51,9 +58,10 @@ export default function CustomersPage() {
     }
   };
 
-  const filteredCustomers = customers.filter(customer => 
-    customer.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    customer.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCustomers = customers.filter(
+    (customer) =>
+      customer.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      customer.email.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -100,19 +108,31 @@ export default function CustomersPage() {
               <TableBody>
                 {filteredCustomers.map((customer) => (
                   <TableRow key={customer.id}>
-                    <TableCell className="font-medium">{customer.full_name}</TableCell>
+                    <TableCell className="font-medium">
+                      {customer.full_name}
+                    </TableCell>
                     <TableCell>{customer.email}</TableCell>
                     <TableCell>{customer.phone || 'N/A'}</TableCell>
                     <TableCell>{customer.orders_count || 0}</TableCell>
-                    <TableCell>${(customer.total_spent || 0).toFixed(2)}</TableCell>
                     <TableCell>
-                      <Badge variant={customer.is_active ? 'default' : 'secondary'}>
+                      ${(customer.total_spent || 0).toFixed(2)}
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={customer.is_active ? 'default' : 'secondary'}
+                      >
                         {customer.is_active ? 'Hoạt Động' : 'Ngừng Hoạt Động'}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end space-x-2">
-                        <Button variant="outline" size="sm" onClick={() => router.push(`/admin/customers/${customer.id}`)}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            router.push(`/admin/customers/${customer.id}`)
+                          }
+                        >
                           <Eye className="h-4 w-4" />
                         </Button>
                       </div>

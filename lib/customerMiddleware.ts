@@ -6,15 +6,20 @@ import { withCustomerAuth } from '@/lib/apiAuth';
 export { withCustomerAuth };
 
 // Keep the old function for backward compatibility
-export async function withCustomerAuthOld(handler: (req: Request) => Promise<NextResponse>) {
+export async function withCustomerAuthOld(
+  handler: (req: Request) => Promise<NextResponse>,
+) {
   return async function (req: Request) {
     try {
       // Get token from Authorization header
       const authHeader = req.headers.get('authorization');
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return NextResponse.json(
-          { success: false, message: 'Authorization header missing or invalid' },
-          { status: 401 }
+          {
+            success: false,
+            message: 'Authorization header missing or invalid',
+          },
+          { status: 401 },
         );
       }
 
@@ -24,7 +29,7 @@ export async function withCustomerAuthOld(handler: (req: Request) => Promise<Nex
       if (!decoded) {
         return NextResponse.json(
           { success: false, message: 'Invalid or expired token' },
-          { status: 401 }
+          { status: 401 },
         );
       }
 
@@ -37,7 +42,7 @@ export async function withCustomerAuthOld(handler: (req: Request) => Promise<Nex
       console.error('Customer auth error:', error);
       return NextResponse.json(
         { success: false, message: 'Internal server error' },
-        { status: 500 }
+        { status: 500 },
       );
     }
   };

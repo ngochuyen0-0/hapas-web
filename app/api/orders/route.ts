@@ -16,7 +16,7 @@ export const GET = withCustomerAuth(async (req: Request) => {
     if (!customerId) {
       return NextResponse.json(
         { success: false, message: 'Customer ID is required' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -32,17 +32,17 @@ export const GET = withCustomerAuth(async (req: Request) => {
             product: {
               select: {
                 name: true,
-                image_urls: true
-              }
-            }
-          }
-        }
-      }
+                image_urls: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     // Get total count for pagination
-    const total = await prisma.order.count({ 
-      where: { customer_id: customerId } 
+    const total = await prisma.order.count({
+      where: { customer_id: customerId },
     });
 
     return NextResponse.json({
@@ -52,14 +52,14 @@ export const GET = withCustomerAuth(async (req: Request) => {
         page,
         limit,
         total,
-        totalPages: Math.ceil(total / limit)
-      }
+        totalPages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
     console.error('Error fetching orders:', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 });
@@ -71,15 +71,22 @@ export const POST = withCustomerAuth(async (req: Request) => {
     // Extract customer_id from the authenticated customer context
     const customer = (req as any).customer;
     const customerId = customer.customerId;
-    
+
     const { shipping_address, billing_address, items } = body;
 
     // Validate order data (excluding customer_id since it comes from auth context)
-    const validationErrors = validateOrderData({ customer_id: customerId, items });
+    const validationErrors = validateOrderData({
+      customer_id: customerId,
+      items,
+    });
     if (validationErrors.length > 0) {
       return NextResponse.json(
-        { success: false, message: 'Validation failed', errors: validationErrors },
-        { status: 400 }
+        {
+          success: false,
+          message: 'Validation failed',
+          errors: validationErrors,
+        },
+        { status: 400 },
       );
     }
 
@@ -102,13 +109,13 @@ export const POST = withCustomerAuth(async (req: Request) => {
             product_id: item.product_id,
             quantity: item.quantity,
             unit_price: item.unit_price,
-            total_price: item.quantity * item.unit_price
-          }))
-        }
+            total_price: item.quantity * item.unit_price,
+          })),
+        },
       },
       include: {
-        order_items: true
-      }
+        order_items: true,
+      },
     });
 
     // Update inventory (reserve quantities)
@@ -117,30 +124,33 @@ export const POST = withCustomerAuth(async (req: Request) => {
         where: { product_id: item.product_id },
         data: {
           reserved_quantity: {
-            increment: item.quantity
-          }
-        }
+            increment: item.quantity,
+          },
+        },
       });
     }
 
-    return NextResponse.json({
-      success: true,
-      message: 'Order created successfully',
-      order
-    }, { status: 201 });
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Order created successfully',
+        order,
+      },
+      { status: 201 },
+    );
   } catch (error) {
     console.error('Error creating order:', error);
-    
+
     if (error instanceof ValidationError) {
       return NextResponse.json(
         { success: false, message: error.message },
-        { status: 400 }
+        { status: 400 },
       );
     }
-    
+
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 });

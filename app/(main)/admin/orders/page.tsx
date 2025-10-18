@@ -4,15 +4,16 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Search, 
-  Eye,
-  Truck,
-  CheckCircle,
-  XCircle
-} from 'lucide-react';
+import { Search, Eye, Truck, CheckCircle, XCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 // Define TypeScript interfaces for our data
@@ -46,10 +47,10 @@ export default function OrdersPage() {
       const token = localStorage.getItem('adminToken');
       const response = await fetch('/api/admin/orders', {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      
+
       const data = await response.json();
       if (data.success) {
         setOrders(data.orders);
@@ -68,9 +69,9 @@ export default function OrdersPage() {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ status })
+        body: JSON.stringify({ status }),
       });
 
       const data = await response.json();
@@ -86,9 +87,10 @@ export default function OrdersPage() {
     }
   };
 
-  const filteredOrders = orders.filter(order => 
-    order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.customer.full_name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredOrders = orders.filter(
+    (order) =>
+      order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      order.customer.full_name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const getStatusBadge = (status: string) => {
@@ -153,41 +155,56 @@ export default function OrdersPage() {
                   <TableRow key={order.id}>
                     <TableCell className="font-medium">{order.id}</TableCell>
                     <TableCell>{order.customer.full_name}</TableCell>
-                    <TableCell>{new Date(order.order_date).toLocaleDateString()}</TableCell>
+                    <TableCell>
+                      {new Date(order.order_date).toLocaleDateString()}
+                    </TableCell>
                     <TableCell>${order.total_amount.toFixed(2)}</TableCell>
                     <TableCell>{getStatusBadge(order.status)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end space-x-2">
-                        <Button variant="outline" size="sm" onClick={() => router.push(`/admin/orders/${order.id}`)}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            router.push(`/admin/orders/${order.id}`)
+                          }
+                        >
                           <Eye className="h-4 w-4" />
                         </Button>
                         {order.status === 'pending' && (
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            onClick={() => handleUpdateOrderStatus(order.id, 'processing')}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() =>
+                              handleUpdateOrderStatus(order.id, 'processing')
+                            }
                           >
                             <CheckCircle className="h-4 w-4" />
                           </Button>
                         )}
                         {order.status === 'processing' && (
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            onClick={() => handleUpdateOrderStatus(order.id, 'shipped')}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() =>
+                              handleUpdateOrderStatus(order.id, 'shipped')
+                            }
                           >
                             <Truck className="h-4 w-4" />
                           </Button>
                         )}
-                        {order.status !== 'completed' && order.status !== 'cancelled' && (
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            onClick={() => handleUpdateOrderStatus(order.id, 'cancelled')}
-                          >
-                            <XCircle className="h-4 w-4" />
-                          </Button>
-                        )}
+                        {order.status !== 'completed' &&
+                          order.status !== 'cancelled' && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() =>
+                                handleUpdateOrderStatus(order.id, 'cancelled')
+                              }
+                            >
+                              <XCircle className="h-4 w-4" />
+                            </Button>
+                          )}
                       </div>
                     </TableCell>
                   </TableRow>

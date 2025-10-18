@@ -14,7 +14,6 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
-
 export default function EditProductPage({ params }: Props) {
   const [formData, setFormData] = useState({
     name: '',
@@ -26,15 +25,15 @@ export default function EditProductPage({ params }: Props) {
     color: '',
     size: '',
     image_urls: '',
-    is_active: true
+    is_active: true,
   });
   const [inventoryQuantity, setInventoryQuantity] = useState(0);
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
- const [saving, setSaving] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
-  const {id: productId} = use(params);
+  const { id: productId } = use(params);
 
   useEffect(() => {
     if (productId) {
@@ -50,24 +49,26 @@ export default function EditProductPage({ params }: Props) {
     try {
       setLoading(true);
       setError('');
-      
+
       const token = localStorage.getItem('adminToken');
       if (!token) {
         router.push('/login');
         return;
       }
-      
+
       const response = await fetch(`/api/admin/products/${productId}`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      
+
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || `Lỗi HTTP! trạng thái: ${response.status}`);
+        throw new Error(
+          data.message || `Lỗi HTTP! trạng thái: ${response.status}`,
+        );
       }
-      
+
       const data = await response.json();
       if (data.success) {
         const product = data.product;
@@ -81,9 +82,9 @@ export default function EditProductPage({ params }: Props) {
           color: product.color || '',
           size: product.size || '',
           image_urls: product.image_urls || '',
-          is_active: product.is_active
+          is_active: product.is_active,
         });
-        
+
         // Set inventory quantity if exists
         if (product.inventories && product.inventories.length > 0) {
           setInventoryQuantity(product.inventories[0].quantity);
@@ -104,9 +105,11 @@ export default function EditProductPage({ params }: Props) {
       const response = await fetch('/api/public/categories');
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || `Lỗi HTTP! trạng thái: ${response.status}`);
+        throw new Error(
+          data.message || `Lỗi HTTP! trạng thái: ${response.status}`,
+        );
       }
-      
+
       const data = await response.json();
       if (data.success) {
         setCategories(data.categories);
@@ -118,13 +121,23 @@ export default function EditProductPage({ params }: Props) {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     const { name, value, type } = e.target;
-    const checked = type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined;
-    
-    setFormData(prev => ({
+    const checked =
+      type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined;
+
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : (type === 'number' ? parseFloat(value) || 0 : value)
+      [name]:
+        type === 'checkbox'
+          ? checked
+          : type === 'number'
+            ? parseFloat(value) || 0
+            : value,
     }));
   };
 
@@ -139,27 +152,29 @@ export default function EditProductPage({ params }: Props) {
         router.push('/login');
         return;
       }
-      
+
       const response = await fetch(`/api/admin/products/${productId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           ...formData,
           price: parseFloat(formData.price),
-          inventory_quantity: inventoryQuantity
-        })
+          inventory_quantity: inventoryQuantity,
+        }),
       });
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || `Lỗi HTTP! trạng thái: ${response.status}`);
+        throw new Error(
+          data.message || `Lỗi HTTP! trạng thái: ${response.status}`,
+        );
       }
 
       const data = await response.json();
-      
+
       if (data.success) {
         router.push('/admin/products');
       } else {
@@ -201,7 +216,7 @@ export default function EditProductPage({ params }: Props) {
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          
+
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Thông tin cơ bản */}
             <Card>
@@ -221,7 +236,7 @@ export default function EditProductPage({ params }: Props) {
                       placeholder="Nhập tên sản phẩm"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="price">Giá *</Label>
                     <Input
@@ -235,7 +250,7 @@ export default function EditProductPage({ params }: Props) {
                       placeholder="0.00"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="category_id">Danh mục *</Label>
                     <select
@@ -254,7 +269,7 @@ export default function EditProductPage({ params }: Props) {
                       ))}
                     </select>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="brand">Thương hiệu</Label>
                     <Input
@@ -268,7 +283,7 @@ export default function EditProductPage({ params }: Props) {
                 </div>
               </CardContent>
             </Card>
-            
+
             {/* Thông tin chi tiết */}
             <Card>
               <CardHeader>
@@ -286,7 +301,7 @@ export default function EditProductPage({ params }: Props) {
                       placeholder="Ví dụ: Da, Vải..."
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="color">Màu sắc</Label>
                     <Input
@@ -297,7 +312,7 @@ export default function EditProductPage({ params }: Props) {
                       placeholder="Ví dụ: Đen, Trắng..."
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="size">Kích thước</Label>
                     <Input
@@ -309,7 +324,7 @@ export default function EditProductPage({ params }: Props) {
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="description">Mô tả</Label>
                   <Textarea
@@ -323,7 +338,7 @@ export default function EditProductPage({ params }: Props) {
                 </div>
               </CardContent>
             </Card>
-            
+
             {/* Kho và hình ảnh */}
             <Card>
               <CardHeader>
@@ -339,11 +354,13 @@ export default function EditProductPage({ params }: Props) {
                       type="number"
                       min="0"
                       value={inventoryQuantity}
-                      onChange={(e) => setInventoryQuantity(parseInt(e.target.value) || 0)}
+                      onChange={(e) =>
+                        setInventoryQuantity(parseInt(e.target.value) || 0)
+                      }
                       placeholder="0"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="is_active">Trạng Thái</Label>
                     <div className="flex items-center pt-2">
@@ -361,9 +378,11 @@ export default function EditProductPage({ params }: Props) {
                     </div>
                   </div>
                 </div>
-              
+
                 <div className="space-y-2">
-                  <Label htmlFor="image_urls">URL Hình ảnh (phân tách bằng dấu phẩy)</Label>
+                  <Label htmlFor="image_urls">
+                    URL Hình ảnh (phân tách bằng dấu phẩy)
+                  </Label>
                   <Textarea
                     id="image_urls"
                     name="image_urls"
@@ -373,7 +392,7 @@ export default function EditProductPage({ params }: Props) {
                     placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
                   />
                 </div>
-                
+
                 {/* Image preview section */}
                 {formData.image_urls && (
                   <div className="space-y-2">
@@ -387,35 +406,43 @@ export default function EditProductPage({ params }: Props) {
                           // Single base64 image
                           return (
                             <div className="relative">
-                              <img 
-                                src={imageUrls} 
+                              <img
+                                src={imageUrls}
                                 alt={`Xem trước hình ảnh`}
                                 className="w-full h-32 object-cover rounded-lg border"
                               />
-                              <p className="text-xs text-center mt-1 text-gray-500">Hình ảnh base64</p>
+                              <p className="text-xs text-center mt-1 text-gray-500">
+                                Hình ảnh base64
+                              </p>
                             </div>
                           );
                         }
                         // Check if it contains multiple images (URLs separated by commas)
                         else if (imageUrls.includes('http')) {
                           // Multiple URL images separated by commas
-                          return imageUrls.split(',').map((url: string, index: number) => {
-                            const trimmedUrl = url.trim();
-                            return trimmedUrl ? (
-                              <div key={index} className="relative">
-                                <img 
-                                  src={trimmedUrl} 
-                                  alt={`Xem trước ${index + 1}`}
-                                  className="w-full h-32 object-cover rounded-lg border"
-                                  onError={(e) => {
-                                    const target = e.target as HTMLImageElement;
-                                    target.src = 'https://placehold.co/400x400?text=Lỗi+hình+ảnh';
-                                  }}
-                                />
-                                <p className="text-xs text-center mt-1 text-gray-500">Hình {index + 1}</p>
-                              </div>
-                            ) : null;
-                          });
+                          return imageUrls
+                            .split(',')
+                            .map((url: string, index: number) => {
+                              const trimmedUrl = url.trim();
+                              return trimmedUrl ? (
+                                <div key={index} className="relative">
+                                  <img
+                                    src={trimmedUrl}
+                                    alt={`Xem trước ${index + 1}`}
+                                    className="w-full h-32 object-cover rounded-lg border"
+                                    onError={(e) => {
+                                      const target =
+                                        e.target as HTMLImageElement;
+                                      target.src =
+                                        'https://placehold.co/400x400?text=Lỗi+hình+ảnh';
+                                    }}
+                                  />
+                                  <p className="text-xs text-center mt-1 text-gray-500">
+                                    Hình {index + 1}
+                                  </p>
+                                </div>
+                              ) : null;
+                            });
                         }
                         // Fallback for any other case
                         return (
@@ -427,7 +454,7 @@ export default function EditProductPage({ params }: Props) {
                     </div>
                   </div>
                 )}
-                
+
                 <div className="flex justify-end space-x-4 pt-4">
                   <Button
                     type="button"

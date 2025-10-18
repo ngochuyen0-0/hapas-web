@@ -5,20 +5,24 @@ Welcome to the Hapas Admin Dashboard. This is a Next.js application for managing
 ## Quick Start
 
 1. Install dependencies:
+
 ```bash
 pnpm install
 ```
 
 2. Set up your database:
+
 - Create a PostgreSQL database
 - Update DATABASE_URL in .env.local
 
 3. Run migrations:
+
 ```bash
 pnpm prisma migrate dev
 ```
 
 4. Start the development server:
+
 ```bash
 pnpm dev
 ```
@@ -52,6 +56,7 @@ NEXTAUTH_URL=http://localhost:3000
 ## API Authentication
 
 All API routes are protected with JWT authentication. There are two types of users:
+
 1. Admin users (store administrators)
 2. Customer users (store customers)
 

@@ -28,10 +28,10 @@ export const GET = withCustomerAuth(async (req: Request) => {
       include: {
         category: {
           select: {
-            name: true
-          }
-        }
-      }
+            name: true,
+          },
+        },
+      },
     });
 
     // Get total count for pagination
@@ -44,14 +44,14 @@ export const GET = withCustomerAuth(async (req: Request) => {
         page,
         limit,
         total,
-        totalPages: Math.ceil(total / limit)
-      }
+        totalPages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
     console.error('Error fetching products:', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 });
@@ -60,14 +60,28 @@ export const GET = withCustomerAuth(async (req: Request) => {
 export const POST = withAdminAuth(async (req: Request) => {
   try {
     const body = await req.json();
-    const { name, description, price, category_id, brand, material, color, size, image_urls } = body;
+    const {
+      name,
+      description,
+      price,
+      category_id,
+      brand,
+      material,
+      color,
+      size,
+      image_urls,
+    } = body;
 
     // Validate product data
     const validationErrors = validateProductData({ name, price, category_id });
     if (validationErrors.length > 0) {
       return NextResponse.json(
-        { success: false, message: 'Validation failed', errors: validationErrors },
-        { status: 400 }
+        {
+          success: false,
+          message: 'Validation failed',
+          errors: validationErrors,
+        },
+        { status: 400 },
       );
     }
 
@@ -83,8 +97,8 @@ export const POST = withAdminAuth(async (req: Request) => {
         color,
         size,
         image_urls,
-        is_active: true
-      }
+        is_active: true,
+      },
     });
 
     // Create initial inventory record
@@ -92,28 +106,31 @@ export const POST = withAdminAuth(async (req: Request) => {
       data: {
         product_id: product.id,
         quantity: 0,
-        reserved_quantity: 0
-      }
+        reserved_quantity: 0,
+      },
     });
 
-    return NextResponse.json({
-      success: true,
-      message: 'Product created successfully',
-      product
-    }, { status: 201 });
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Product created successfully',
+        product,
+      },
+      { status: 201 },
+    );
   } catch (error) {
     console.error('Error creating product:', error);
-    
+
     if (error instanceof ValidationError) {
       return NextResponse.json(
         { success: false, message: error.message },
-        { status: 400 }
+        { status: 400 },
       );
     }
-    
+
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 });

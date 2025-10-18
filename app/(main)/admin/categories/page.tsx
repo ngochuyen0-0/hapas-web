@@ -5,15 +5,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Search, 
-  Plus, 
-  Edit, 
-  Trash2,
-  Upload
-} from 'lucide-react';
+import { Search, Plus, Edit, Trash2, Upload } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Switch } from '@/components/ui/switch';
@@ -37,7 +38,7 @@ export default function CategoriesPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const router = useRouter();
-  
+
   // Form state for creating/editing categories
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
@@ -45,7 +46,7 @@ export default function CategoriesPage() {
     name: '',
     description: '',
     image_url: '',
-    is_active: true
+    is_active: true,
   });
 
   useEffect(() => {
@@ -57,10 +58,10 @@ export default function CategoriesPage() {
       const token = localStorage.getItem('adminToken');
       const response = await fetch('/api/admin/categories', {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      
+
       const data = await response.json();
       if (data.success) {
         setCategories(data.categories);
@@ -81,7 +82,7 @@ export default function CategoriesPage() {
       name: '',
       description: '',
       image_url: '',
-      is_active: true
+      is_active: true,
     });
     setIsFormOpen(true);
   };
@@ -92,7 +93,7 @@ export default function CategoriesPage() {
       name: category.name,
       description: category.description || '',
       image_url: category.image_url || '',
-      is_active: category.is_active
+      is_active: category.is_active,
     });
     setIsFormOpen(true);
   };
@@ -107,8 +108,8 @@ export default function CategoriesPage() {
       const response = await fetch(`/api/admin/categories/${categoryId}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       const data = await response.json();
@@ -127,32 +128,39 @@ export default function CategoriesPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       const token = localStorage.getItem('adminToken');
-      const url = editingCategory 
-        ? `/api/admin/categories/${editingCategory.id}` 
+      const url = editingCategory
+        ? `/api/admin/categories/${editingCategory.id}`
         : '/api/admin/categories';
-      
+
       const method = editingCategory ? 'PUT' : 'POST';
-      
+
       const response = await fetch(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
       const data = await response.json();
       if (data.success) {
-        setSuccess(editingCategory ? 'Cập nhật danh mục thành công' : 'Tạo danh mục thành công');
+        setSuccess(
+          editingCategory
+            ? 'Cập nhật danh mục thành công'
+            : 'Tạo danh mục thành công',
+        );
         setIsFormOpen(false);
         fetchCategories();
         setTimeout(() => setSuccess(''), 3000);
       } else {
-        setError(data.message || `Không thể ${editingCategory ? 'cập nhật' : 'tạo'} danh mục`);
+        setError(
+          data.message ||
+            `Không thể ${editingCategory ? 'cập nhật' : 'tạo'} danh mục`,
+        );
       }
     } catch (error) {
       console.error('Lỗi khi lưu danh mục:', error);
@@ -160,8 +168,8 @@ export default function CategoriesPage() {
     }
   };
 
-  const filteredCategories = categories.filter(category => 
-    category.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCategories = categories.filter((category) =>
+    category.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   if (isFormOpen) {
@@ -183,7 +191,10 @@ export default function CategoriesPage() {
         )}
 
         {success && (
-          <Alert variant="default" className="bg-green-100 border-green-500 text-green-800">
+          <Alert
+            variant="default"
+            className="bg-green-100 border-green-500 text-green-800"
+          >
             <AlertDescription>{success}</AlertDescription>
           </Alert>
         )}
@@ -196,7 +207,9 @@ export default function CategoriesPage() {
                 <Input
                   id="name"
                   value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   placeholder="Nhập tên danh mục"
                   required
                 />
@@ -207,7 +220,9 @@ export default function CategoriesPage() {
                 <Textarea
                   id="description"
                   value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   placeholder="Nhập mô tả danh mục"
                   rows={3}
                 />
@@ -218,7 +233,9 @@ export default function CategoriesPage() {
                 <Input
                   id="image_url"
                   value={formData.image_url}
-                  onChange={(e) => setFormData({...formData, image_url: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, image_url: e.target.value })
+                  }
                   placeholder="Nhập URL hình ảnh"
                 />
               </div>
@@ -227,13 +244,19 @@ export default function CategoriesPage() {
                 <Switch
                   id="is_active"
                   checked={formData.is_active}
-                  onCheckedChange={(checked) => setFormData({...formData, is_active: checked})}
+                  onCheckedChange={(checked) =>
+                    setFormData({ ...formData, is_active: checked })
+                  }
                 />
                 <Label htmlFor="is_active">Kích Hoạt</Label>
               </div>
 
               <div className="flex justify-end space-x-2 pt-4">
-                <Button type="button" variant="outline" onClick={() => setIsFormOpen(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsFormOpen(false)}
+                >
                   Hủy
                 </Button>
                 <Button type="submit">
@@ -269,7 +292,10 @@ export default function CategoriesPage() {
       )}
 
       {success && (
-        <Alert variant="default" className="bg-green-100 border-green-500 text-green-800">
+        <Alert
+          variant="default"
+          className="bg-green-100 border-green-500 text-green-800"
+        >
           <AlertDescription>{success}</AlertDescription>
         </Alert>
       )}
@@ -306,19 +332,33 @@ export default function CategoriesPage() {
               <TableBody>
                 {filteredCategories.map((category) => (
                   <TableRow key={category.id}>
-                    <TableCell className="font-medium">{category.name}</TableCell>
-                    <TableCell>{category.description || 'Không có mô tả'}</TableCell>
+                    <TableCell className="font-medium">
+                      {category.name}
+                    </TableCell>
                     <TableCell>
-                      <Badge variant={category.is_active ? 'default' : 'secondary'}>
+                      {category.description || 'Không có mô tả'}
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={category.is_active ? 'default' : 'secondary'}
+                      >
                         {category.is_active ? 'Hoạt Động' : 'Ngừng Hoạt Động'}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end space-x-2">
-                        <Button variant="outline" size="sm" onClick={() => handleEditCategory(category)}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEditCategory(category)}
+                        >
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button variant="outline" size="sm" onClick={() => handleDeleteCategory(category.id)}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDeleteCategory(category.id)}
+                        >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
@@ -327,8 +367,13 @@ export default function CategoriesPage() {
                 ))}
                 {filteredCategories.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center py-8 text-gray-500">
-                      {searchTerm ? 'Không tìm thấy danh mục phù hợp' : 'Chưa có danh mục nào'}
+                    <TableCell
+                      colSpan={4}
+                      className="text-center py-8 text-gray-500"
+                    >
+                      {searchTerm
+                        ? 'Không tìm thấy danh mục phù hợp'
+                        : 'Chưa có danh mục nào'}
                     </TableCell>
                   </TableRow>
                 )}

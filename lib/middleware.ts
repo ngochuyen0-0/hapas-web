@@ -6,15 +6,20 @@ import { withAdminAuth } from '@/lib/apiAuth';
 export { withAdminAuth };
 
 // Keep the old function for backward compatibility
-export function withAdminAuthOld(handler: (req: Request) => Promise<NextResponse> | NextResponse) {
+export function withAdminAuthOld(
+  handler: (req: Request) => Promise<NextResponse> | NextResponse,
+) {
   return async function (req: Request) {
     try {
       // Get token from Authorization header
       const authHeader = req.headers.get('authorization');
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return NextResponse.json(
-          { success: false, message: 'Authorization header missing or invalid' },
-          { status: 401 }
+          {
+            success: false,
+            message: 'Authorization header missing or invalid',
+          },
+          { status: 401 },
         );
       }
 
@@ -24,7 +29,7 @@ export function withAdminAuthOld(handler: (req: Request) => Promise<NextResponse
       if (!decoded) {
         return NextResponse.json(
           { success: false, message: 'Invalid or expired token' },
-          { status: 401 }
+          { status: 401 },
         );
       }
 
@@ -37,8 +42,12 @@ export function withAdminAuthOld(handler: (req: Request) => Promise<NextResponse
     } catch (error: any) {
       console.error('Admin auth error:', error);
       return NextResponse.json(
-        { success: false, message: 'Internal server error', error: error.message },
-        { status: 500 }
+        {
+          success: false,
+          message: 'Internal server error',
+          error: error.message,
+        },
+        { status: 500 },
       );
     }
   };

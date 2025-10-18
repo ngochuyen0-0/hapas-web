@@ -4,16 +4,16 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Search, 
-  Plus, 
-  Edit, 
-  Trash2,
-  Eye,
-  Upload
-} from 'lucide-react';
+import { Search, Plus, Edit, Trash2, Eye, Upload } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 // Define TypeScript interfaces for our data models
@@ -72,10 +72,10 @@ export default function ProductsPage() {
       const token = localStorage.getItem('adminToken');
       const response = await fetch('/api/admin/products', {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      
+
       const data = await response.json();
       if (data.success) {
         setProducts(data.products);
@@ -109,8 +109,8 @@ export default function ProductsPage() {
       const response = await fetch(`/api/admin/products/${productId}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       const data = await response.json();
@@ -126,9 +126,10 @@ export default function ProductsPage() {
     }
   };
 
-  const filteredProducts = products.filter(product => 
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.category.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredProducts = products.filter(
+    (product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.category.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -140,7 +141,10 @@ export default function ProductsPage() {
             Quản lý kho hàng túi xách của bạn
           </p>
         </div>
-        <Button className="mt-4 sm:mt-0" onClick={() => router.push('/admin/products/new')}>
+        <Button
+          className="mt-4 sm:mt-0"
+          onClick={() => router.push('/admin/products/new')}
+        >
           <Plus className="mr-2 h-4 w-4" />
           Thêm Sản Phẩm
         </Button>
@@ -182,24 +186,49 @@ export default function ProductsPage() {
                   const inventory = product.inventories?.[0] || { quantity: 0 };
                   return (
                     <TableRow key={product.id}>
-                      <TableCell className="font-medium">{product.name}</TableCell>
+                      <TableCell className="font-medium">
+                        {product.name}
+                      </TableCell>
                       <TableCell>{product.category.name}</TableCell>
-                      <TableCell> {Number(product.price).toFixed(2)} đ</TableCell>
+                      <TableCell>
+                        {' '}
+                        {Number(product.price).toFixed(2)} đ
+                      </TableCell>
                       <TableCell>{inventory.quantity}</TableCell>
                       <TableCell>
-                        <Badge variant={product.is_active ? 'default' : 'destructive'}>
+                        <Badge
+                          variant={
+                            product.is_active ? 'default' : 'destructive'
+                          }
+                        >
                           {product.is_active ? 'Hoạt Động' : 'Ngừng Hoạt Động'}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end space-x-2">
-                          <Button variant="outline" size="sm" onClick={() => router.push(`/admin/products/${product.id}`)}>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() =>
+                              router.push(`/admin/products/${product.id}`)
+                            }
+                          >
                             <Eye className="h-4 w-4" />
                           </Button>
-                          <Button variant="outline" size="sm" onClick={() => router.push(`/admin/products/${product.id}/edit`)}>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() =>
+                              router.push(`/admin/products/${product.id}/edit`)
+                            }
+                          >
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button variant="outline" size="sm" onClick={() => handleDeleteProduct(product.id)}>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDeleteProduct(product.id)}
+                          >
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>

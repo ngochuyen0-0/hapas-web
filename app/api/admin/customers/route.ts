@@ -9,7 +9,7 @@ export async function GET(request: Request) {
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json(
         { success: false, message: 'Authorization header missing or invalid' },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -19,26 +19,26 @@ export async function GET(request: Request) {
     if (!decoded) {
       return NextResponse.json(
         { success: false, message: 'Invalid or expired token' },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
     // Fetch all customers
     const customers = await prisma.customer.findMany({
       orderBy: {
-        created_at: 'desc'
-      }
+        created_at: 'desc',
+      },
     });
 
     return NextResponse.json({
       success: true,
-      customers
+      customers,
     });
   } catch (error) {
     console.error('Error fetching customers:', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -6,7 +6,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { AlertCircle, User, MapPin, CreditCard, Package } from 'lucide-react';
 
 export default function ViewOrderPage() {
@@ -28,10 +35,10 @@ export default function ViewOrderPage() {
       const token = localStorage.getItem('adminToken');
       const response = await fetch(`/api/admin/orders/${orderId}`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      
+
       const data = await response.json();
       if (data.success) {
         setOrder(data.order);
@@ -53,9 +60,9 @@ export default function ViewOrderPage() {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ status })
+        body: JSON.stringify({ status }),
       });
 
       const data = await response.json();
@@ -102,20 +109,36 @@ export default function ViewOrderPage() {
       case 'pending':
         return (
           <div className="flex space-x-2">
-            <Button onClick={() => handleUpdateOrderStatus('processing')}>Process Order</Button>
-            <Button variant="destructive" onClick={() => handleUpdateOrderStatus('cancelled')}>Cancel Order</Button>
+            <Button onClick={() => handleUpdateOrderStatus('processing')}>
+              Process Order
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => handleUpdateOrderStatus('cancelled')}
+            >
+              Cancel Order
+            </Button>
           </div>
         );
       case 'processing':
         return (
           <div className="flex space-x-2">
-            <Button onClick={() => handleUpdateOrderStatus('shipped')}>Mark as Shipped</Button>
-            <Button variant="destructive" onClick={() => handleUpdateOrderStatus('cancelled')}>Cancel Order</Button>
+            <Button onClick={() => handleUpdateOrderStatus('shipped')}>
+              Mark as Shipped
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => handleUpdateOrderStatus('cancelled')}
+            >
+              Cancel Order
+            </Button>
           </div>
         );
       case 'shipped':
         return (
-          <Button onClick={() => handleUpdateOrderStatus('completed')}>Mark as Delivered</Button>
+          <Button onClick={() => handleUpdateOrderStatus('completed')}>
+            Mark as Delivered
+          </Button>
         );
       default:
         return null;
@@ -151,14 +174,23 @@ export default function ViewOrderPage() {
                 Customer Information
               </h3>
               <div className="space-y-2">
-                <p><span className="font-medium">Name:</span> {order.customer.full_name}</p>
-                <p><span className="font-medium">Email:</span> {order.customer.email}</p>
+                <p>
+                  <span className="font-medium">Name:</span>{' '}
+                  {order.customer.full_name}
+                </p>
+                <p>
+                  <span className="font-medium">Email:</span>{' '}
+                  {order.customer.email}
+                </p>
                 {order.customer.phone && (
-                  <p><span className="font-medium">Phone:</span> {order.customer.phone}</p>
+                  <p>
+                    <span className="font-medium">Phone:</span>{' '}
+                    {order.customer.phone}
+                  </p>
                 )}
               </div>
             </div>
-            
+
             <div>
               <h3 className="text-lg font-medium mb-4 flex items-center">
                 <MapPin className="h-5 w-5 mr-2" />
@@ -168,19 +200,25 @@ export default function ViewOrderPage() {
                 <p>{order.shipping_address}</p>
               </div>
             </div>
-            
+
             <div>
               <h3 className="text-lg font-medium mb-4 flex items-center">
                 <CreditCard className="h-5 w-5 mr-2" />
                 Payment Information
               </h3>
               <div className="space-y-2">
-                <p><span className="font-medium">Total:</span> ${order.total_amount.toFixed(2)}</p>
-                <p><span className="font-medium">Date:</span> {new Date(order.order_date).toLocaleDateString()}</p>
+                <p>
+                  <span className="font-medium">Total:</span> $
+                  {order.total_amount.toFixed(2)}
+                </p>
+                <p>
+                  <span className="font-medium">Date:</span>{' '}
+                  {new Date(order.order_date).toLocaleDateString()}
+                </p>
               </div>
             </div>
           </div>
-          
+
           <div className="mt-8">
             <h3 className="text-lg font-medium mb-4 flex items-center">
               <Package className="h-5 w-5 mr-2" />

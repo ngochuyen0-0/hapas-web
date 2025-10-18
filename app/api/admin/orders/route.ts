@@ -9,7 +9,7 @@ export async function GET(request: Request) {
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json(
         { success: false, message: 'Authorization header missing or invalid' },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
     if (!decoded) {
       return NextResponse.json(
         { success: false, message: 'Invalid or expired token' },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -30,24 +30,24 @@ export async function GET(request: Request) {
           select: {
             id: true,
             full_name: true,
-            email: true
-          }
-        }
+            email: true,
+          },
+        },
       },
       orderBy: {
-        order_date: 'desc'
-      }
+        order_date: 'desc',
+      },
     });
 
     return NextResponse.json({
       success: true,
-      orders
+      orders,
     });
   } catch (error) {
     console.error('Error fetching orders:', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -61,7 +61,7 @@ export async function PUT(request: Request) {
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json(
         { success: false, message: 'Authorization header missing or invalid' },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -71,26 +71,26 @@ export async function PUT(request: Request) {
     if (!decoded) {
       return NextResponse.json(
         { success: false, message: 'Invalid or expired token' },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
     // Update order status
     const updatedOrder = await prisma.order.update({
       where: { id },
-      data: { status }
+      data: { status },
     });
 
     return NextResponse.json({
       success: true,
       message: 'Order status updated successfully',
-      order: updatedOrder
+      order: updatedOrder,
     });
   } catch (error) {
     console.error('Error updating order status:', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

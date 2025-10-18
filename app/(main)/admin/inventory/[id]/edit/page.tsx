@@ -14,7 +14,7 @@ export default function EditInventoryPage() {
   const [formData, setFormData] = useState({
     quantity: 0,
     reserved_quantity: 0,
-    location: ''
+    location: '',
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -34,17 +34,17 @@ export default function EditInventoryPage() {
       const token = localStorage.getItem('adminToken');
       const response = await fetch(`/api/admin/inventory/${inventoryId}`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      
+
       const data = await response.json();
       if (data.success) {
         setInventoryItem(data.inventory);
         setFormData({
           quantity: data.inventory.quantity,
           reserved_quantity: data.inventory.reserved_quantity,
-          location: data.inventory.location || ''
+          location: data.inventory.location || '',
         });
       }
     } catch (error) {
@@ -57,9 +57,9 @@ export default function EditInventoryPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: name === 'location' ? value : parseInt(value) || 0
+      [name]: name === 'location' ? value : parseInt(value) || 0,
     }));
   };
 
@@ -74,13 +74,13 @@ export default function EditInventoryPage() {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         router.push('/admin/inventory');
       } else {
@@ -140,12 +140,14 @@ export default function EditInventoryPage() {
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          
+
           <div className="mb-6 p-4 bg-gray-50 rounded-lg">
             <h3 className="font-medium">{inventoryItem.product.name}</h3>
-            <p className="text-sm text-gray-500">{inventoryItem.product.category.name}</p>
+            <p className="text-sm text-gray-500">
+              {inventoryItem.product.category.name}
+            </p>
           </div>
-          
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
@@ -159,7 +161,7 @@ export default function EditInventoryPage() {
                   required
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="reserved_quantity">Reserved Stock</Label>
                 <Input
@@ -171,7 +173,7 @@ export default function EditInventoryPage() {
                   readOnly
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="location">Storage Location</Label>
                 <Input
@@ -183,7 +185,7 @@ export default function EditInventoryPage() {
                 />
               </div>
             </div>
-            
+
             <div className="flex justify-end space-x-4">
               <Button
                 type="button"

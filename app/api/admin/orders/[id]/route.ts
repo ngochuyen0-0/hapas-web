@@ -4,7 +4,7 @@ import { verifyAdminToken } from '@/lib/auth';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     const { id } = params;
@@ -14,7 +14,7 @@ export async function GET(
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json(
         { success: false, message: 'Authorization header missing or invalid' },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -24,7 +24,7 @@ export async function GET(
     if (!decoded) {
       return NextResponse.json(
         { success: false, message: 'Invalid or expired token' },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -38,8 +38,8 @@ export async function GET(
             full_name: true,
             email: true,
             phone: true,
-            address: true
-          }
+            address: true,
+          },
         },
         order_items: {
           include: {
@@ -48,31 +48,31 @@ export async function GET(
                 id: true,
                 name: true,
                 price: true,
-                image_urls: true
-              }
-            }
-          }
+                image_urls: true,
+              },
+            },
+          },
         },
-        payment: true
-      }
+        payment: true,
+      },
     });
 
     if (!order) {
       return NextResponse.json(
         { success: false, message: 'Order not found' },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     return NextResponse.json({
       success: true,
-      order
+      order,
     });
   } catch (error) {
     console.error('Error fetching order:', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -12,7 +12,7 @@ export const GET = withCustomerAuth(async (req: Request) => {
     if (!productId) {
       return NextResponse.json(
         { success: false, message: 'Product ID is required' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -22,22 +22,22 @@ export const GET = withCustomerAuth(async (req: Request) => {
       include: {
         category: {
           select: {
-            name: true
-          }
-        }
-      }
+            name: true,
+          },
+        },
+      },
     });
 
     if (!product) {
       return NextResponse.json(
         { success: false, message: 'Product not found' },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     // Fetch inventory info
     const inventory = await prisma.inventory.findFirst({
-      where: { product_id: productId }
+      where: { product_id: productId },
     });
 
     // Fetch reviews
@@ -46,11 +46,11 @@ export const GET = withCustomerAuth(async (req: Request) => {
       include: {
         customer: {
           select: {
-            full_name: true
-          }
-        }
+            full_name: true,
+          },
+        },
       },
-      orderBy: { created_at: 'desc' }
+      orderBy: { created_at: 'desc' },
     });
 
     return NextResponse.json({
@@ -58,14 +58,14 @@ export const GET = withCustomerAuth(async (req: Request) => {
       product: {
         ...product,
         inventory: inventory || null,
-        reviews
-      }
+        reviews,
+      },
     });
   } catch (error) {
     console.error('Error fetching product details:', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 });

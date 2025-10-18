@@ -2,15 +2,20 @@ import { NextResponse } from 'next/server';
 import { verifyAdminToken, verifyCustomerToken } from '@/lib/auth';
 
 // Middleware for protecting admin routes
-export function withAdminAuth(handler: (req: Request) => Promise<NextResponse> | NextResponse) {
+export function withAdminAuth(
+  handler: (req: Request) => Promise<NextResponse> | NextResponse,
+) {
   return async function (req: Request) {
     try {
       // Get token from Authorization header
       const authHeader = req.headers.get('authorization');
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return NextResponse.json(
-          { success: false, message: 'Authorization header missing or invalid' },
-          { status: 401 }
+          {
+            success: false,
+            message: 'Authorization header missing or invalid',
+          },
+          { status: 401 },
         );
       }
 
@@ -20,7 +25,7 @@ export function withAdminAuth(handler: (req: Request) => Promise<NextResponse> |
       if (!decoded) {
         return NextResponse.json(
           { success: false, message: 'Invalid or expired token' },
-          { status: 401 }
+          { status: 401 },
         );
       }
 
@@ -32,23 +37,32 @@ export function withAdminAuth(handler: (req: Request) => Promise<NextResponse> |
     } catch (error: any) {
       console.error('Admin auth error:', error);
       return NextResponse.json(
-        { success: false, message: 'Internal server error', error: error.message },
-        { status: 500 }
+        {
+          success: false,
+          message: 'Internal server error',
+          error: error.message,
+        },
+        { status: 500 },
       );
     }
   };
 }
 
 // Middleware for protecting customer routes
-export function withCustomerAuth(handler: (req: Request) => Promise<NextResponse> | NextResponse) {
+export function withCustomerAuth(
+  handler: (req: Request) => Promise<NextResponse> | NextResponse,
+) {
   return async function (req: Request) {
     try {
       // Get token from Authorization header
       const authHeader = req.headers.get('authorization');
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return NextResponse.json(
-          { success: false, message: 'Authorization header missing or invalid' },
-          { status: 401 }
+          {
+            success: false,
+            message: 'Authorization header missing or invalid',
+          },
+          { status: 401 },
         );
       }
 
@@ -58,7 +72,7 @@ export function withCustomerAuth(handler: (req: Request) => Promise<NextResponse
       if (!decoded) {
         return NextResponse.json(
           { success: false, message: 'Invalid or expired token' },
-          { status: 401 }
+          { status: 401 },
         );
       }
 
@@ -70,8 +84,12 @@ export function withCustomerAuth(handler: (req: Request) => Promise<NextResponse
     } catch (error: any) {
       console.error('Customer auth error:', error);
       return NextResponse.json(
-        { success: false, message: 'Internal server error', error: error.message },
-        { status: 500 }
+        {
+          success: false,
+          message: 'Internal server error',
+          error: error.message,
+        },
+        { status: 500 },
       );
     }
   };
@@ -83,13 +101,13 @@ export async function getAdminFromToken(request: Request) {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return null;
   }
-  
+
   const token = authHeader.substring(7);
   const payload = verifyAdminToken(token);
   if (!payload) {
     return null;
   }
-  
+
   return payload;
 }
 
@@ -99,12 +117,12 @@ export async function getCustomerFromToken(request: Request) {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return null;
   }
-  
+
   const token = authHeader.substring(7);
   const payload = verifyCustomerToken(token);
   if (!payload) {
     return null;
   }
-  
+
   return payload;
 }

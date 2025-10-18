@@ -2,17 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  Package, 
-  ShoppingCart, 
-  DollarSign, 
+import {
+  Package,
+  ShoppingCart,
+  DollarSign,
   Users,
   TrendingUp,
-  TrendingDown
+  TrendingDown,
 } from 'lucide-react';
 import { fetchDashboardStats, fetchWithAuth } from '@/lib/api';
 
-// Define types for our data
 interface Order {
   id: string;
   customer: {
@@ -37,15 +36,12 @@ export default function DashboardPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        
-        // Fetch dashboard stats
+
         const statsData = await fetchDashboardStats();
         setStats(statsData);
-        
-        // Fetch recent orders (limit to 5)
+
         const ordersResponse = await fetchWithAuth('/orders');
         if (ordersResponse.success) {
-          // Get only the first 5 orders
           const recent = ordersResponse.orders.slice(0, 5);
           setRecentOrders(recent);
         }
@@ -60,7 +56,11 @@ export default function DashboardPage() {
   }, []);
 
   if (loading) {
-    return <div className="flex items-center justify-center h-64">Đang tải dữ liệu bảng điều khiển...</div>;
+    return (
+      <div className="flex items-center justify-center h-64">
+        Đang tải dữ liệu bảng điều khiển...
+      </div>
+    );
   }
 
   return (
@@ -81,10 +81,12 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalProducts}</div>
-            <p className="text-xs text-muted-foreground">+12% so với tháng trước</p>
+            <p className="text-xs text-muted-foreground">
+              +12% so với tháng trước
+            </p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Tổng Đơn Hàng</CardTitle>
@@ -92,29 +94,41 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalOrders}</div>
-            <p className="text-xs text-muted-foreground">+8% so với tháng trước</p>
+            <p className="text-xs text-muted-foreground">
+              +8% so với tháng trước
+            </p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Tổng Doanh Thu</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Tổng Doanh Thu
+            </CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${stats.totalRevenue.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">+15% so với tháng trước</p>
+            <div className="text-2xl font-bold">
+              ${stats.totalRevenue.toFixed(2)}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              +15% so với tháng trước
+            </p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Tổng Khách Hàng</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Tổng Khách Hàng
+            </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalCustomers}</div>
-            <p className="text-xs text-muted-foreground">+5% so với tháng trước</p>
+            <p className="text-xs text-muted-foreground">
+              +5% so với tháng trước
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -128,21 +142,38 @@ export default function DashboardPage() {
           <CardContent>
             <div className="space-y-4">
               {recentOrders.map((order) => (
-                <div key={order.id} className="flex items-center justify-between border-b pb-3 last:border-0 last:pb-0">
+                <div
+                  key={order.id}
+                  className="flex items-center justify-between border-b pb-3 last:border-0 last:pb-0"
+                >
                   <div>
                     <p className="font-medium">{order.id}</p>
-                    <p className="text-sm text-gray-500">{order.customer?.full_name || 'Khách Hàng Không Xác Định'}</p>
+                    <p className="text-sm text-gray-500">
+                      {order.customer?.full_name || 'Khách Hàng Không Xác Định'}
+                    </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-medium">${parseFloat(order.total_amount).toFixed(2)}</p>
-                    <p className={`text-sm ${
-                      order.status === 'Completed' ? 'text-green-600' : 
-                      order.status === 'Processing' ? 'text-yellow-600' : 
-                      order.status === 'Shipped' ? 'text-blue-600' : 'text-gray-600'
-                    }`}>
-                      {order.status === 'Completed' ? 'Hoàn Thành' : 
-                       order.status === 'Processing' ? 'Đang Xử Lý' : 
-                       order.status === 'Shipped' ? 'Đã Giao' : order.status}
+                    <p className="font-medium">
+                      ${parseFloat(order.total_amount).toFixed(2)}
+                    </p>
+                    <p
+                      className={`text-sm ${
+                        order.status === 'Completed'
+                          ? 'text-green-600'
+                          : order.status === 'Processing'
+                            ? 'text-yellow-600'
+                            : order.status === 'Shipped'
+                              ? 'text-blue-600'
+                              : 'text-gray-600'
+                      }`}
+                    >
+                      {order.status === 'Completed'
+                        ? 'Hoàn Thành'
+                        : order.status === 'Processing'
+                          ? 'Đang Xử Lý'
+                          : order.status === 'Shipped'
+                            ? 'Đã Giao'
+                            : order.status}
                     </p>
                   </div>
                 </div>
@@ -161,7 +192,9 @@ export default function DashboardPage() {
               <div className="text-center">
                 <TrendingUp className="h-12 w-12 text-green-500 mx-auto mb-2" />
                 <p className="text-lg font-medium">Biểu Đồ Doanh Thu</p>
-                <p className="text-sm text-gray-500">Hình ảnh hóa sẽ xuất hiện ở đây</p>
+                <p className="text-sm text-gray-500">
+                  Hình ảnh hóa sẽ xuất hiện ở đây
+                </p>
               </div>
             </div>
           </CardContent>

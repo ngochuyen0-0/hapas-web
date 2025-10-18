@@ -12,8 +12,8 @@ import { AlertCircle } from 'lucide-react';
 
 interface Category {
   id: string;
- name: string;
- description: string | null;
+  name: string;
+  description: string | null;
   image_url: string | null;
   is_active: boolean;
   created_at: string;
@@ -23,13 +23,13 @@ interface Category {
 interface ProductFormData {
   name: string;
   description: string;
-    price: string;
+  price: string;
   category_id: string;
   brand: string;
- material: string;
- color: string;
- size: string;
-    image_urls: string;
+  material: string;
+  color: string;
+  size: string;
+  image_urls: string;
   is_active: boolean;
   initial_stock_quantity: number;
 }
@@ -45,7 +45,7 @@ export default function NewProductPage() {
     size: '',
     image_urls: '',
     is_active: true,
-    initial_stock_quantity: 0
+    initial_stock_quantity: 0,
   });
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
@@ -66,15 +66,27 @@ export default function NewProductPage() {
     } catch (error) {
       console.error('Lỗi khi tải danh mục:', error);
     }
- };
+  };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     const { name, value, type } = e.target;
-    const checked = type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined;
-    
-    setFormData(prev => ({
+    const checked =
+      type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined;
+
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : (name === 'initial_stock_quantity' ? parseInt(value) || 0 : (type === 'number' ? parseFloat(value) || 0 : value))
+      [name]:
+        type === 'checkbox'
+          ? checked
+          : name === 'initial_stock_quantity'
+            ? parseInt(value) || 0
+            : type === 'number'
+              ? parseFloat(value) || 0
+              : value,
     }));
   };
 
@@ -89,17 +101,18 @@ export default function NewProductPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           ...formData,
           price: parseFloat(formData.price),
-          initial_stock_quantity: parseInt(formData.initial_stock_quantity.toString()) || 0
-        })
+          initial_stock_quantity:
+            parseInt(formData.initial_stock_quantity.toString()) || 0,
+        }),
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         router.push('/admin/products');
       } else {
@@ -117,9 +130,7 @@ export default function NewProductPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Thêm Sản Phẩm Mới</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Tạo sản phẩm túi xách mới
-        </p>
+        <p className="mt-1 text-sm text-gray-500">Tạo sản phẩm túi xách mới</p>
       </div>
 
       {/* Thông tin cơ bản */}
@@ -134,7 +145,7 @@ export default function NewProductPage() {
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
@@ -148,7 +159,7 @@ export default function NewProductPage() {
                   placeholder="Nhập tên sản phẩm"
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="price">Giá *</Label>
                 <Input
@@ -162,7 +173,7 @@ export default function NewProductPage() {
                   placeholder="0.00"
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="category_id">Danh Mục *</Label>
                 <select
@@ -181,7 +192,7 @@ export default function NewProductPage() {
                   ))}
                 </select>
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="brand">Thương Hiệu</Label>
                 <Input
@@ -196,7 +207,7 @@ export default function NewProductPage() {
           </form>
         </CardContent>
       </Card>
-      
+
       {/* Thông tin chi tiết */}
       <Card>
         <CardHeader>
@@ -215,7 +226,7 @@ export default function NewProductPage() {
                   placeholder="Ví dụ: Da, Vải..."
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="color">Màu Sắc</Label>
                 <Input
@@ -226,7 +237,7 @@ export default function NewProductPage() {
                   placeholder="Ví dụ: Đen, Trắng..."
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="size">Kích Thước</Label>
                 <Input
@@ -238,7 +249,7 @@ export default function NewProductPage() {
                 />
               </div>
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="description">Mô Tả</Label>
               <Textarea
@@ -253,7 +264,7 @@ export default function NewProductPage() {
           </form>
         </CardContent>
       </Card>
-      
+
       {/* Kho và hình ảnh */}
       <Card>
         <CardHeader>
@@ -263,7 +274,9 @@ export default function NewProductPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="initial_stock_quantity">Số Lượng Kho Ban Đầu</Label>
+                <Label htmlFor="initial_stock_quantity">
+                  Số Lượng Kho Ban Đầu
+                </Label>
                 <Input
                   id="initial_stock_quantity"
                   name="initial_stock_quantity"
@@ -274,7 +287,7 @@ export default function NewProductPage() {
                   placeholder="0"
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="is_active">Trạng Thái</Label>
                 <div className="flex items-center pt-2">
@@ -292,9 +305,11 @@ export default function NewProductPage() {
                 </div>
               </div>
             </div>
-          
+
             <div className="space-y-2">
-              <Label htmlFor="image_urls">URL Hình Ảnh (phân tách bằng dấu phẩy)</Label>
+              <Label htmlFor="image_urls">
+                URL Hình Ảnh (phân tách bằng dấu phẩy)
+              </Label>
               <Textarea
                 id="image_urls"
                 name="image_urls"
@@ -304,7 +319,7 @@ export default function NewProductPage() {
                 placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
               />
             </div>
-            
+
             <div className="flex justify-end space-x-4 pt-4">
               <Button
                 type="button"

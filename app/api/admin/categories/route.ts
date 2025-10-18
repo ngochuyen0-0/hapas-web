@@ -8,13 +8,13 @@ async function getAdminFromToken(request: Request) {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return null;
   }
-  
+
   const token = authHeader.substring(7);
   const payload = verifyAdminToken(token);
   if (!payload) {
     return null;
   }
-  
+
   return payload;
 }
 
@@ -25,13 +25,13 @@ export async function GET(req: Request) {
     if (!admin) {
       return NextResponse.json(
         { success: false, message: 'Unauthorized' },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
     const { searchParams } = new URL(req.url);
     const isActive = searchParams.get('is_active');
-    
+
     const where: any = {};
     if (isActive !== null) {
       where.is_active = isActive === 'true';
@@ -39,18 +39,18 @@ export async function GET(req: Request) {
 
     const categories = await prisma.category.findMany({
       where,
-      orderBy: { created_at: 'desc' }
+      orderBy: { created_at: 'desc' },
     });
 
     return NextResponse.json({
       success: true,
-      categories
+      categories,
     });
   } catch (error) {
     console.error('Error fetching categories:', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -62,7 +62,7 @@ export async function POST(req: Request) {
     if (!admin) {
       return NextResponse.json(
         { success: false, message: 'Unauthorized' },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -73,19 +73,19 @@ export async function POST(req: Request) {
     if (!name) {
       return NextResponse.json(
         { success: false, message: 'Tên danh mục là bắt buộc' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Check if category with same name already exists
     const existingCategory = await prisma.category.findFirst({
-      where: { name: { equals: name, mode: 'insensitive' } }
+      where: { name: { equals: name, mode: 'insensitive' } },
     });
 
     if (existingCategory) {
       return NextResponse.json(
         { success: false, message: 'Danh mục với tên này đã tồn tại' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -94,20 +94,20 @@ export async function POST(req: Request) {
         name,
         description: description || null,
         image_url: image_url || null,
-        is_active: is_active !== undefined ? is_active : true
-      }
+        is_active: is_active !== undefined ? is_active : true,
+      },
     });
 
     return NextResponse.json({
       success: true,
       message: 'Tạo danh mục thành công',
-      category
+      category,
     });
   } catch (error) {
     console.error('Error creating category:', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

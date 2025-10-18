@@ -4,7 +4,7 @@ import { verifyAdminToken } from '@/lib/auth';
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     const { id } = params;
@@ -15,7 +15,7 @@ export async function PUT(
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json(
         { success: false, message: 'Authorization header missing or invalid' },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -25,35 +25,41 @@ export async function PUT(
     if (!decoded) {
       return NextResponse.json(
         { success: false, message: 'Invalid or expired token' },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
     // Validate status
-    const validStatuses = ['pending', 'processing', 'shipped', 'completed', 'cancelled'];
+    const validStatuses = [
+      'pending',
+      'processing',
+      'shipped',
+      'completed',
+      'cancelled',
+    ];
     if (!validStatuses.includes(status)) {
       return NextResponse.json(
         { success: false, message: 'Invalid status' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Update order status
     const updatedOrder = await prisma.order.update({
       where: { id },
-      data: { status }
+      data: { status },
     });
 
     return NextResponse.json({
       success: true,
       message: 'Order status updated successfully',
-      order: updatedOrder
+      order: updatedOrder,
     });
   } catch (error) {
     console.error('Error updating order status:', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
