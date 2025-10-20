@@ -14,6 +14,7 @@ import {
   Menu,
   X,
   Tag,
+  MessageSquare,
 } from 'lucide-react';
 
 export default function AdminLayout({
@@ -55,6 +56,7 @@ export default function AdminLayout({
     { name: 'Sản phẩm', href: '/admin/products', icon: Package },
     { name: 'Đơn hàng', href: '/admin/orders', icon: ShoppingCart },
     { name: 'Khách hàng', href: '/admin/customers', icon: Users },
+    { name: 'Đánh giá', href: '/admin/reviews', icon: MessageSquare },
     { name: 'Báo cáo', href: '/admin/reports', icon: BarChart },
     { name: 'Cài đặt', href: '/admin/settings', icon: Settings },
   ];

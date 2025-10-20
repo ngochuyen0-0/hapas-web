@@ -118,8 +118,9 @@ model Review {
   customer_id         String
   product_id          String
   rating              Int
-  comment             String?
-  is_verified_purchase Boolean  @default(false)
+ comment             String?
+ is_verified_purchase Boolean  @default(false)
+  status              String   @default("pending") // pending, approved, rejected
   created_at          DateTime @default(now())
   updated_at          DateTime @updatedAt
   customer            Customer @relation(fields: [customer_id], references: [id])

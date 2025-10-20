@@ -429,6 +429,61 @@ async function main() {
   });
   console.log(`Đã tạo ${customers.count} khách hàng`);
 
+  // Lấy danh sách khách hàng và sản phẩm để tạo đánh giá
+ const allCustomers = await prisma.customer.findMany();
+  const allProducts = await prisma.product.findMany();
+
+  // Tạo đánh giá mẫu
+  const reviewsData = [
+    {
+      customer_id: allCustomers[0].id,
+      product_id: allProducts[0].id,
+      rating: 5,
+      comment: 'Sản phẩm tuyệt vời, chất lượng tốt, giao hàng nhanh',
+      is_verified_purchase: true,
+      status: 'pending',
+    },
+    {
+      customer_id: allCustomers[1].id,
+      product_id: allProducts[1].id,
+      rating: 4,
+      comment: 'Túi đẹp nhưng có một chút lỗi nhỏ',
+      is_verified_purchase: true,
+      status: 'pending',
+    },
+    {
+      customer_id: allCustomers[2].id,
+      product_id: allProducts[2].id,
+      rating: 3,
+      comment: 'Sản phẩm tạm ổn, đúng như mô tả',
+      is_verified_purchase: false,
+      status: 'approved',
+    },
+    {
+      customer_id: allCustomers[3].id,
+      product_id: allProducts[3].id,
+      rating: 1,
+      comment: 'Chất lượng không như mong đợi, thất vọng',
+      is_verified_purchase: true,
+      status: 'rejected',
+    },
+    {
+      customer_id: allCustomers[4].id,
+      product_id: allProducts[4].id,
+      rating: 5,
+      comment: 'Rất ưng ý, sẽ ủng hộ tiếp',
+      is_verified_purchase: true,
+      status: 'pending',
+    },
+  ];
+
+  for (const reviewData of reviewsData) {
+    await prisma.review.create({
+      data: reviewData,
+    });
+ }
+  console.log(`Đã tạo ${reviewsData.length} đánh giá`);
+
   console.log('Hoàn thành tạo dữ liệu mẫu.');
 }
 
