@@ -11,14 +11,14 @@ export const GET = withCustomerAuth(async (req: Request) => {
     // Fetch only active products for customers
     const products = await prisma.product.findMany({
       where: {
-        is_active: true,
+        is_active: true
       },
       include: {
-        category: true,
+        category: true
       },
       orderBy: {
-        created_at: 'desc',
-      },
+        created_at: 'desc'
+      }
     });
 
     return NextResponse.json({
@@ -26,14 +26,14 @@ export const GET = withCustomerAuth(async (req: Request) => {
       products,
       customer: {
         id: customer.customerId,
-        email: customer.email,
-      },
+        email: customer.email
+      }
     });
   } catch (error) {
     console.error('Error fetching products:', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 },
+      { status: 500 }
     );
   }
 });

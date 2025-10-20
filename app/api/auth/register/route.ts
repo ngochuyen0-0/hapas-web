@@ -7,12 +7,13 @@ import { ValidationError } from '@/lib/errors';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, password, full_name } = body;
+    const { email, password, full_name, phone } = body;
 
     const validationErrors = validateCustomerData({
       email,
       password,
       full_name,
+      phone,
     });
     if (validationErrors.length > 0) {
       return NextResponse.json(
@@ -43,6 +44,7 @@ export async function POST(request: Request) {
         email,
         password_hash,
         full_name,
+        phone: phone || null, // phone is optional
       },
     });
 

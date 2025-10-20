@@ -3,7 +3,7 @@ import { withAdminAuth } from '@/lib/middleware';
 import { prisma } from '@/lib/prisma';
 
 // Protected route - only accessible by authenticated admins
-export const GET = withAdminAuth(async (req: Request) => {
+export const GET = withAdminAuth(async (req: Request, _ctx) => {
   try {
     // Get admin info from the request context
     const admin = (req as any).admin;
@@ -42,7 +42,7 @@ export const GET = withAdminAuth(async (req: Request) => {
 });
 
 // Protected route - only accessible by authenticated admins
-export const POST = withAdminAuth(async (req: Request) => {
+export const POST = withAdminAuth(async (req: Request, _ctx) => {
   try {
     // Get admin info from the request context
     const admin = (req as any).admin;
@@ -110,7 +110,7 @@ export const POST = withAdminAuth(async (req: Request) => {
       },
       { status: 201 },
     );
-  } catch (error: any) {
+ } catch (error: any) {
     console.error('Error creating product:', error);
     return NextResponse.json(
       {

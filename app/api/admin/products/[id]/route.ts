@@ -1,34 +1,11 @@
 import { NextResponse } from 'next/server';
+import { withAdminAuth } from '@/lib/middleware';
 import { prisma } from '@/lib/prisma';
-import { verifyAdminToken } from '@/lib/auth';
-import { p } from 'framer-motion/client';
 
-// GET - Fetch a single product by ID
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } },
-) {
+// Protected route - only accessible by authenticated admins
+export const GET = withAdminAuth(async (req: Request, { params }) => {
   try {
-    const { id } = params;
-
-    // Check if user is authenticated using custom JWT verification
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { success: false, message: 'Authorization header missing or invalid' },
-        { status: 401 },
-      );
-    }
-
-    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
-    const decoded = verifyAdminToken(token);
-
-    if (!decoded) {
-      return NextResponse.json(
-        { success: false, message: 'Invalid or expired token' },
-        { status: 401 },
-      );
-    }
+    const { id } = params as { id: string };
 
     // Fetch product with category and inventory info
     const product = await prisma.product.findUnique({
@@ -62,44 +39,25 @@ export async function GET(
       { status: 500 },
     );
   }
-}
+});
 
-// PUT - Update a product by ID
-export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } },
-) {
+// Protected route - only accessible by authenticated admins
+export const PUT = withAdminAuth(async (req: Request, { params }) => {
   try {
-    const { id } = params;
+    const { id } = params as { id: string };
 
-    // Check if user is authenticated using custom JWT verification
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { success: false, message: 'Authorization header missing or invalid' },
-        { status: 401 },
-      );
-    }
+    // Get admin info from the request context
+    const admin = (req as any).admin;
 
-    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
-    const decoded = verifyAdminToken(token);
-
-    if (!decoded) {
-      return NextResponse.json(
-        { success: false, message: 'Invalid or expired token' },
-        { status: 401 },
-      );
-    }
-
-    // Check if admin has permission to update products
-    if (decoded.role !== 'manager' && decoded.role !== 'super_admin') {
+    // Only managers and super admins can update products
+    if (admin.role !== 'manager' && admin.role !== 'super_admin') {
       return NextResponse.json(
         { success: false, message: 'Insufficient permissions' },
         { status: 403 },
       );
     }
 
-    const body = await request.json();
+    const body = await req.json();
     const {
       name,
       description,
@@ -185,37 +143,18 @@ export async function PUT(
       { status: 500 },
     );
   }
-}
+});
 
-// DELETE - Delete a product by ID
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } },
-) {
-  try {
-    const { id } = params;
+// Protected route - only accessible by authenticated admins
+export const DELETE = withAdminAuth(async (req: Request, { params }) => {
+ try {
+    const { id } = params as { id: string };
 
-    // Check if user is authenticated using custom JWT verification
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { success: false, message: 'Authorization header missing or invalid' },
-        { status: 401 },
-      );
-    }
+    // Get admin info from the request context
+    const admin = (req as any).admin;
 
-    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
-    const decoded = verifyAdminToken(token);
-
-    if (!decoded) {
-      return NextResponse.json(
-        { success: false, message: 'Invalid or expired token' },
-        { status: 401 },
-      );
-    }
-
-    // Check if admin has permission to delete products
-    if (decoded.role !== 'manager' && decoded.role !== 'super_admin') {
+    // Only managers and super admins can delete products
+    if (admin.role !== 'manager' && admin.role !== 'super_admin') {
       return NextResponse.json(
         { success: false, message: 'Insufficient permissions' },
         { status: 403 },
@@ -253,4 +192,4 @@ export async function DELETE(
       { status: 500 },
     );
   }
-}
+});

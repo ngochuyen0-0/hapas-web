@@ -19,7 +19,7 @@ export async function middleware(request: NextRequest) {
     // Handle preflight requests
     if (request.method === 'OPTIONS') {
       return new Response(null, {
-        status: 20,
+        status: 204,
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
