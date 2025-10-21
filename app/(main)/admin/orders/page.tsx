@@ -153,6 +153,7 @@ export default function OrdersPage() {
               <TableBody>
                 {filteredOrders.map((order) => (
                   <TableRow key={order.id}>
+                    <TableCell>{order.id}</TableCell>
                     <TableCell>{order.customer.full_name}</TableCell>
                     <TableCell>
                       {new Date(order.order_date).toLocaleDateString()}
