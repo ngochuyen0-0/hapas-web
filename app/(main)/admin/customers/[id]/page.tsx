@@ -26,7 +26,6 @@ export default function ViewCustomerPage() {
   const [customer, setCustomer] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const router = useRouter();
   const searchParams = useSearchParams();
   const customerId = searchParams.get('id');
 

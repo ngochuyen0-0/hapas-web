@@ -153,12 +153,12 @@ export default function OrdersPage() {
               <TableBody>
                 {filteredOrders.map((order) => (
                   <TableRow key={order.id}>
-                    <TableCell className="font-medium">{order.id}</TableCell>
                     <TableCell>{order.customer.full_name}</TableCell>
                     <TableCell>
                       {new Date(order.order_date).toLocaleDateString()}
                     </TableCell>
-                    <TableCell>${order.total_amount.toFixed(2)}</TableCell>
+                    <TableCell>${Number(order.total_amount).toFixed(2)
+                    }</TableCell>
                     <TableCell>{getStatusBadge(order.status)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end space-x-2">
