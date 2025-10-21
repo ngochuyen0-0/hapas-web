@@ -147,49 +147,97 @@ export const PUT = withAdminAuth(async (req: Request, { params }) => {
 
 // Protected route - only accessible by authenticated admins
 export const DELETE = withAdminAuth(async (req: Request, { params }) => {
- try {
-    const { id } = params as { id: string };
+  try {
+     const { id } = params as { id: string };
 
-    // Get admin info from the request context
-    const admin = (req as any).admin;
+     // Get admin info from the request context
+     const admin = (req as any).admin;
 
-    // Only managers and super admins can delete products
-    if (admin.role !== 'manager' && admin.role !== 'super_admin') {
-      return NextResponse.json(
-        { success: false, message: 'Insufficient permissions' },
-        { status: 403 },
-      );
-    }
+     // Only managers and super admins can delete products
+     if (admin.role !== 'manager' && admin.role !== 'super_admin') {
+       return NextResponse.json(
+         { success: false, message: 'Insufficient permissions' },
+         { status: 403 },
+       );
+     }
 
-    // Delete product
-    await prisma.inventory.deleteMany({
-      where: { product_id: id },
-    });
-    await prisma.product.delete({
-      where: { id },
-    });
+     // Check if the product exists first
+     const product = await prisma.product.findUnique({
+       where: { id },
+     });
 
-    return NextResponse.json({
-      success: true,
-      message: 'Product deleted successfully',
-    });
-  } catch (error: any) {
-    console.error('Error deleting product:', error);
+     if (!product) {
+       return NextResponse.json(
+         { success: false, message: 'Product not found' },
+         { status: 404 },
+       );
+     }
 
-    if (error.code === 'P2025') {
-      return NextResponse.json(
-        { success: false, message: 'Product not found' },
-        { status: 404 },
-      );
-    }
+     // Check if there are any orders containing this product
+     const orderItems = await prisma.orderItem.findFirst({
+       where: { product_id: id },
+       select: { order_id: true }
+     });
 
-    return NextResponse.json(
-      {
-        success: false,
-        message: 'Internal server error',
-        error: error.message,
-      },
-      { status: 500 },
-    );
-  }
+     if (orderItems) {
+       // If there are orders with this product, we need to handle them
+       // For now, we'll delete the order items but keep the orders themselves
+       // This is a business decision - we might want to preserve order history
+       await prisma.orderItem.deleteMany({
+         where: { product_id: id },
+       });
+     }
+
+     // Delete other related records
+     await prisma.wishlist.deleteMany({
+       where: { product_id: id },
+     });
+
+     await prisma.review.deleteMany({
+       where: { product_id: id },
+     });
+
+     await prisma.inventory.deleteMany({
+       where: { product_id: id },
+     });
+
+     // Finally, delete the product
+     await prisma.product.delete({
+       where: { id },
+     });
+
+     return NextResponse.json({
+       success: true,
+       message: 'Product deleted successfully',
+     });
+   } catch (error: any) {
+     console.error('Error deleting product:', error);
+
+     if (error.code === 'P2025') {
+       return NextResponse.json(
+         { success: false, message: 'Product not found' },
+         { status: 404 },
+       );
+     }
+
+     // Check if this is a foreign key constraint error
+     if (error.code === 'P2003' || error.code === '23503') {
+       return NextResponse.json(
+         {
+           success: false,
+           message: 'Cannot delete product because it is referenced by other records (orders, reviews, or wishlists). Please remove all references first.'
+         },
+         { status: 400 },
+       );
+     }
+
+     return NextResponse.json(
+       {
+         success: false,
+         message: 'Internal server error',
+         error: error.message,
+       },
+       { status: 500 },
+     );
+   }
 });

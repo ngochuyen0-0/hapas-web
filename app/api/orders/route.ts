@@ -72,7 +72,7 @@ export const POST = withCustomerAuth(async (req: Request) => {
     const customer = (req as any).customer;
     const customerId = customer.customerId;
 
-    const { shipping_address, billing_address, items } = body;
+    const { shipping_address, billing_address, items, payment_method, note } = body;
 
     // Validate order data (excluding customer_id since it comes from auth context)
     const validationErrors = validateOrderData({
@@ -112,9 +112,22 @@ export const POST = withCustomerAuth(async (req: Request) => {
             total_price: item.quantity * item.unit_price,
           })),
         },
+        // Create payment record if payment method is provided
+        ...(payment_method && {
+          payment: {
+            create: {
+              payment_method: payment_method,
+              amount: total_amount,
+              status: 'pending',
+            }
+          }
+        }),
+        // Add note if provided
+        ...(note && { note }),
       },
       include: {
         order_items: true,
+        payment: true, // Include payment in the response
       },
     });
 

@@ -6948,6 +6948,7 @@ export namespace Prisma {
     total_amount: Decimal | null
     shipping_address: string | null
     billing_address: string | null
+    note: string | null
     order_date: Date | null
     shipped_date: Date | null
     delivered_date: Date | null
@@ -6962,6 +6963,7 @@ export namespace Prisma {
     total_amount: Decimal | null
     shipping_address: string | null
     billing_address: string | null
+    note: string | null
     order_date: Date | null
     shipped_date: Date | null
     delivered_date: Date | null
@@ -6976,6 +6978,7 @@ export namespace Prisma {
     total_amount: number
     shipping_address: number
     billing_address: number
+    note: number
     order_date: number
     shipped_date: number
     delivered_date: number
@@ -7000,6 +7003,7 @@ export namespace Prisma {
     total_amount?: true
     shipping_address?: true
     billing_address?: true
+    note?: true
     order_date?: true
     shipped_date?: true
     delivered_date?: true
@@ -7014,6 +7018,7 @@ export namespace Prisma {
     total_amount?: true
     shipping_address?: true
     billing_address?: true
+    note?: true
     order_date?: true
     shipped_date?: true
     delivered_date?: true
@@ -7028,6 +7033,7 @@ export namespace Prisma {
     total_amount?: true
     shipping_address?: true
     billing_address?: true
+    note?: true
     order_date?: true
     shipped_date?: true
     delivered_date?: true
@@ -7129,6 +7135,7 @@ export namespace Prisma {
     total_amount: Decimal
     shipping_address: string | null
     billing_address: string | null
+    note: string | null
     order_date: Date
     shipped_date: Date | null
     delivered_date: Date | null
@@ -7162,6 +7169,7 @@ export namespace Prisma {
     total_amount?: boolean
     shipping_address?: boolean
     billing_address?: boolean
+    note?: boolean
     order_date?: boolean
     shipped_date?: boolean
     delivered_date?: boolean
@@ -7180,6 +7188,7 @@ export namespace Prisma {
     total_amount?: boolean
     shipping_address?: boolean
     billing_address?: boolean
+    note?: boolean
     order_date?: boolean
     shipped_date?: boolean
     delivered_date?: boolean
@@ -7195,6 +7204,7 @@ export namespace Prisma {
     total_amount?: boolean
     shipping_address?: boolean
     billing_address?: boolean
+    note?: boolean
     order_date?: boolean
     shipped_date?: boolean
     delivered_date?: boolean
@@ -7226,6 +7236,7 @@ export namespace Prisma {
       total_amount: Prisma.Decimal
       shipping_address: string | null
       billing_address: string | null
+      note: string | null
       order_date: Date
       shipped_date: Date | null
       delivered_date: Date | null
@@ -7633,6 +7644,7 @@ export namespace Prisma {
     readonly total_amount: FieldRef<"Order", 'Decimal'>
     readonly shipping_address: FieldRef<"Order", 'String'>
     readonly billing_address: FieldRef<"Order", 'String'>
+    readonly note: FieldRef<"Order", 'String'>
     readonly order_date: FieldRef<"Order", 'DateTime'>
     readonly shipped_date: FieldRef<"Order", 'DateTime'>
     readonly delivered_date: FieldRef<"Order", 'DateTime'>
@@ -13001,6 +13013,7 @@ export namespace Prisma {
     total_amount: 'total_amount',
     shipping_address: 'shipping_address',
     billing_address: 'billing_address',
+    note: 'note',
     order_date: 'order_date',
     shipped_date: 'shipped_date',
     delivered_date: 'delivered_date',
@@ -13570,6 +13583,7 @@ export namespace Prisma {
     total_amount?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
     shipping_address?: StringNullableFilter<"Order"> | string | null
     billing_address?: StringNullableFilter<"Order"> | string | null
+    note?: StringNullableFilter<"Order"> | string | null
     order_date?: DateTimeFilter<"Order"> | Date | string
     shipped_date?: DateTimeNullableFilter<"Order"> | Date | string | null
     delivered_date?: DateTimeNullableFilter<"Order"> | Date | string | null
@@ -13587,6 +13601,7 @@ export namespace Prisma {
     total_amount?: SortOrder
     shipping_address?: SortOrderInput | SortOrder
     billing_address?: SortOrderInput | SortOrder
+    note?: SortOrderInput | SortOrder
     order_date?: SortOrder
     shipped_date?: SortOrderInput | SortOrder
     delivered_date?: SortOrderInput | SortOrder
@@ -13607,6 +13622,7 @@ export namespace Prisma {
     total_amount?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
     shipping_address?: StringNullableFilter<"Order"> | string | null
     billing_address?: StringNullableFilter<"Order"> | string | null
+    note?: StringNullableFilter<"Order"> | string | null
     order_date?: DateTimeFilter<"Order"> | Date | string
     shipped_date?: DateTimeNullableFilter<"Order"> | Date | string | null
     delivered_date?: DateTimeNullableFilter<"Order"> | Date | string | null
@@ -13624,6 +13640,7 @@ export namespace Prisma {
     total_amount?: SortOrder
     shipping_address?: SortOrderInput | SortOrder
     billing_address?: SortOrderInput | SortOrder
+    note?: SortOrderInput | SortOrder
     order_date?: SortOrder
     shipped_date?: SortOrderInput | SortOrder
     delivered_date?: SortOrderInput | SortOrder
@@ -13646,6 +13663,7 @@ export namespace Prisma {
     total_amount?: DecimalWithAggregatesFilter<"Order"> | Decimal | DecimalJsLike | number | string
     shipping_address?: StringNullableWithAggregatesFilter<"Order"> | string | null
     billing_address?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    note?: StringNullableWithAggregatesFilter<"Order"> | string | null
     order_date?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     shipped_date?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     delivered_date?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
@@ -14425,6 +14443,7 @@ export namespace Prisma {
     total_amount: Decimal | DecimalJsLike | number | string
     shipping_address?: string | null
     billing_address?: string | null
+    note?: string | null
     order_date?: Date | string
     shipped_date?: Date | string | null
     delivered_date?: Date | string | null
@@ -14442,6 +14461,7 @@ export namespace Prisma {
     total_amount: Decimal | DecimalJsLike | number | string
     shipping_address?: string | null
     billing_address?: string | null
+    note?: string | null
     order_date?: Date | string
     shipped_date?: Date | string | null
     delivered_date?: Date | string | null
@@ -14457,6 +14477,7 @@ export namespace Prisma {
     total_amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     shipping_address?: NullableStringFieldUpdateOperationsInput | string | null
     billing_address?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     order_date?: DateTimeFieldUpdateOperationsInput | Date | string
     shipped_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     delivered_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14474,6 +14495,7 @@ export namespace Prisma {
     total_amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     shipping_address?: NullableStringFieldUpdateOperationsInput | string | null
     billing_address?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     order_date?: DateTimeFieldUpdateOperationsInput | Date | string
     shipped_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     delivered_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14490,6 +14512,7 @@ export namespace Prisma {
     total_amount: Decimal | DecimalJsLike | number | string
     shipping_address?: string | null
     billing_address?: string | null
+    note?: string | null
     order_date?: Date | string
     shipped_date?: Date | string | null
     delivered_date?: Date | string | null
@@ -14503,6 +14526,7 @@ export namespace Prisma {
     total_amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     shipping_address?: NullableStringFieldUpdateOperationsInput | string | null
     billing_address?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     order_date?: DateTimeFieldUpdateOperationsInput | Date | string
     shipped_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     delivered_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14517,6 +14541,7 @@ export namespace Prisma {
     total_amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     shipping_address?: NullableStringFieldUpdateOperationsInput | string | null
     billing_address?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     order_date?: DateTimeFieldUpdateOperationsInput | Date | string
     shipped_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     delivered_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15321,6 +15346,7 @@ export namespace Prisma {
     total_amount?: SortOrder
     shipping_address?: SortOrder
     billing_address?: SortOrder
+    note?: SortOrder
     order_date?: SortOrder
     shipped_date?: SortOrder
     delivered_date?: SortOrder
@@ -15339,6 +15365,7 @@ export namespace Prisma {
     total_amount?: SortOrder
     shipping_address?: SortOrder
     billing_address?: SortOrder
+    note?: SortOrder
     order_date?: SortOrder
     shipped_date?: SortOrder
     delivered_date?: SortOrder
@@ -15353,6 +15380,7 @@ export namespace Prisma {
     total_amount?: SortOrder
     shipping_address?: SortOrder
     billing_address?: SortOrder
+    note?: SortOrder
     order_date?: SortOrder
     shipped_date?: SortOrder
     delivered_date?: SortOrder
@@ -16365,6 +16393,7 @@ export namespace Prisma {
     total_amount: Decimal | DecimalJsLike | number | string
     shipping_address?: string | null
     billing_address?: string | null
+    note?: string | null
     order_date?: Date | string
     shipped_date?: Date | string | null
     delivered_date?: Date | string | null
@@ -16380,6 +16409,7 @@ export namespace Prisma {
     total_amount: Decimal | DecimalJsLike | number | string
     shipping_address?: string | null
     billing_address?: string | null
+    note?: string | null
     order_date?: Date | string
     shipped_date?: Date | string | null
     delivered_date?: Date | string | null
@@ -16479,6 +16509,7 @@ export namespace Prisma {
     total_amount?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
     shipping_address?: StringNullableFilter<"Order"> | string | null
     billing_address?: StringNullableFilter<"Order"> | string | null
+    note?: StringNullableFilter<"Order"> | string | null
     order_date?: DateTimeFilter<"Order"> | Date | string
     shipped_date?: DateTimeNullableFilter<"Order"> | Date | string | null
     delivered_date?: DateTimeNullableFilter<"Order"> | Date | string | null
@@ -17136,6 +17167,7 @@ export namespace Prisma {
     total_amount: Decimal | DecimalJsLike | number | string
     shipping_address?: string | null
     billing_address?: string | null
+    note?: string | null
     order_date?: Date | string
     shipped_date?: Date | string | null
     delivered_date?: Date | string | null
@@ -17152,6 +17184,7 @@ export namespace Prisma {
     total_amount: Decimal | DecimalJsLike | number | string
     shipping_address?: string | null
     billing_address?: string | null
+    note?: string | null
     order_date?: Date | string
     shipped_date?: Date | string | null
     delivered_date?: Date | string | null
@@ -17225,6 +17258,7 @@ export namespace Prisma {
     total_amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     shipping_address?: NullableStringFieldUpdateOperationsInput | string | null
     billing_address?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     order_date?: DateTimeFieldUpdateOperationsInput | Date | string
     shipped_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     delivered_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -17241,6 +17275,7 @@ export namespace Prisma {
     total_amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     shipping_address?: NullableStringFieldUpdateOperationsInput | string | null
     billing_address?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     order_date?: DateTimeFieldUpdateOperationsInput | Date | string
     shipped_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     delivered_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -17304,6 +17339,7 @@ export namespace Prisma {
     total_amount: Decimal | DecimalJsLike | number | string
     shipping_address?: string | null
     billing_address?: string | null
+    note?: string | null
     order_date?: Date | string
     shipped_date?: Date | string | null
     delivered_date?: Date | string | null
@@ -17320,6 +17356,7 @@ export namespace Prisma {
     total_amount: Decimal | DecimalJsLike | number | string
     shipping_address?: string | null
     billing_address?: string | null
+    note?: string | null
     order_date?: Date | string
     shipped_date?: Date | string | null
     delivered_date?: Date | string | null
@@ -17350,6 +17387,7 @@ export namespace Prisma {
     total_amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     shipping_address?: NullableStringFieldUpdateOperationsInput | string | null
     billing_address?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     order_date?: DateTimeFieldUpdateOperationsInput | Date | string
     shipped_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     delivered_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -17366,6 +17404,7 @@ export namespace Prisma {
     total_amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     shipping_address?: NullableStringFieldUpdateOperationsInput | string | null
     billing_address?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     order_date?: DateTimeFieldUpdateOperationsInput | Date | string
     shipped_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     delivered_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -17700,6 +17739,7 @@ export namespace Prisma {
     total_amount: Decimal | DecimalJsLike | number | string
     shipping_address?: string | null
     billing_address?: string | null
+    note?: string | null
     order_date?: Date | string
     shipped_date?: Date | string | null
     delivered_date?: Date | string | null
@@ -17730,6 +17770,7 @@ export namespace Prisma {
     total_amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     shipping_address?: NullableStringFieldUpdateOperationsInput | string | null
     billing_address?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     order_date?: DateTimeFieldUpdateOperationsInput | Date | string
     shipped_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     delivered_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -17745,6 +17786,7 @@ export namespace Prisma {
     total_amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     shipping_address?: NullableStringFieldUpdateOperationsInput | string | null
     billing_address?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     order_date?: DateTimeFieldUpdateOperationsInput | Date | string
     shipped_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     delivered_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -17760,6 +17802,7 @@ export namespace Prisma {
     total_amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     shipping_address?: NullableStringFieldUpdateOperationsInput | string | null
     billing_address?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
     order_date?: DateTimeFieldUpdateOperationsInput | Date | string
     shipped_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     delivered_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

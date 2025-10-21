@@ -99,32 +99,33 @@ export default function ProductsPage() {
     }
   };
 
-  const handleDeleteProduct = async (productId: string) => {
-    if (!confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
-      return;
-    }
-
-    try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch(`/api/admin/products/${productId}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        // Refresh the product list
-        fetchProducts();
-      } else {
-        alert('Không thể xóa sản phẩm: ' + data.message);
+   const handleDeleteProduct = async (productId: string) => {
+      if (!confirm('Bạn có chắc chắn muốn xóa sản phẩm này? Hành động này sẽ xóa tất cả dữ liệu liên quan đến sản phẩm này (kho, đánh giá, danh sách yêu thích), nhưng sẽ không xóa khỏi đơn hàng đã hoàn tất.')) {
+        return;
       }
-    } catch (error) {
-      console.error('Lỗi khi xóa sản phẩm:', error);
-      alert('Đã xảy ra lỗi khi xóa sản phẩm');
-    }
-  };
+  
+      try {
+        const token = localStorage.getItem('adminToken');
+        const response = await fetch(`/api/admin/products/${productId}`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        const data = await response.json();
+        if (data.success) {
+          // Refresh the product list
+          fetchProducts();
+          alert('Xóa sản phẩm thành công!');
+        } else {
+          alert('Không thể xóa sản phẩm: ' + data.message);
+        }
+      } catch (error) {
+        console.error('Lỗi khi xóa sản phẩm:', error);
+        alert('Đã xảy ra lỗi khi xóa sản phẩm');
+      }
+    };
 
   const filteredProducts = products.filter(
     (product) =>

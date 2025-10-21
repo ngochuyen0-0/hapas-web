@@ -81,6 +81,7 @@ model Order {
   total_amount    Decimal
   shipping_address String?
   billing_address  String?
+  note            String?
   order_date      DateTime    @default(now())
   shipped_date    DateTime?
   delivered_date  DateTime?
