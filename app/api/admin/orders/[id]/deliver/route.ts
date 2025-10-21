@@ -43,11 +43,16 @@ function translateOrderStatusToEnglish(status: string): string {
       return 'refunded';
     default:
       return status.toLowerCase(); // Return original status if not found in translation
- }
+  }
 }
 
-export async function GET(request: Request) {
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } },
+) {
   try {
+    const { id } = params;
+
     // Check if user is authenticated using custom JWT verification
     const authHeader = request.headers.get('authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -67,77 +72,51 @@ export async function GET(request: Request) {
       );
     }
 
-    // Parse query parameters to determine if we need recent orders or all orders
-    const url = new URL(request.url);
-    const recentOnly = url.searchParams.get('recent') === 'true';
-    const processingOnly = url.searchParams.get('processing') === 'true';
-    const statusFilter = url.searchParams.get('status');
+    // Fetch the current order to check its status
+    const order = await prisma.order.findUnique({
+      where: { id },
+    });
     
-    // Build the query based on parameters
-    const queryOptions: any = {
-      include: {
-        customer: {
-          select: {
-            id: true,
-            full_name: true,
-            email: true,
-          },
+    if (!order) {
+      return NextResponse.json(
+        { success: false, message: 'Order not found' },
+        { status: 404 },
+      );
+    }
+
+    // Only allow confirming delivery if the current status is 'shipped' or 'Đang Giao'
+    if (order.status !== 'shipped' && translateOrderStatusToVietnamese(order.status) !== 'Đang Giao') {
+      return NextResponse.json(
+        { 
+          success: false, 
+          message: `Cannot confirm delivery for order with status: ${translateOrderStatusToVietnamese(order.status)}. Order must be in 'shipped' status.` 
         },
-      },
-      orderBy: {
-        order_date: 'desc',
-      },
-    };
-    
-    // Add status filter if provided
-    if (statusFilter) {
-      queryOptions.where = {
-        ...queryOptions.where,
-        status: statusFilter.toLowerCase(),
-      };
+        { status: 400 },
+      );
     }
 
-    // If filtering for recent orders (last 24 hours) or processing orders, add where clause
-    if (recentOnly || processingOnly) {
-      queryOptions.where = {};
-      
-      if (recentOnly) {
-        // Filter for orders created in the last 24 hours
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        queryOptions.where.order_date = {
-          gte: yesterday,
-        };
-      }
-      
-      if (processingOnly) {
-        // Filter for orders with processing-related statuses
-        queryOptions.where.status = {
-          in: ['pending', 'processing', 'shipped'],
-        };
-      }
-    }
-
-    // Fetch orders with the specified filters
-    const orders = await prisma.order.findMany(queryOptions);
-    
-    // Translate order statuses to Vietnamese
-    const translatedOrders = orders.map(order => ({
-      ...order,
-      status: translateOrderStatusToVietnamese(order.status),
-    }));
+    // Update order status to 'delivered'
+    const updatedOrder = await prisma.order.update({
+      where: { id },
+      data: {
+        status: 'delivered',
+        updated_at: new Date(),
+      },
+    });
 
     return NextResponse.json({
       success: true,
-      orders: translatedOrders,
+      message: 'Order delivery confirmed successfully',
+      order: {
+        ...updatedOrder,
+        status: translateOrderStatusToVietnamese(updatedOrder.status),
+      },
     });
   } catch (error) {
-    console.error('Error fetching orders:', error);
+    console.error('Error confirming order delivery:', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
       { status: 500 },
     );
   }
 }
-
-// PUT method has been moved to the specific status route: /api/admin/orders/[id]/status

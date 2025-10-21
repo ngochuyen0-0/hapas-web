@@ -78,6 +78,30 @@ export default function ViewOrderPage() {
     }
   };
 
+  const handleConfirmDelivery = async () => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`/api/admin/orders/${orderId}/deliver`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        // Refresh the order
+        fetchOrder();
+      } else {
+        alert('Failed to confirm delivery: ' + data.message);
+      }
+    } catch (error) {
+      console.error('Error confirming delivery:', error);
+      alert('An error occurred while confirming delivery');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center py-8">
@@ -104,46 +128,81 @@ export default function ViewOrderPage() {
     );
   }
 
-  const getStatusActions = () => {
-    switch (order.status) {
-      case 'pending':
-        return (
-          <div className="flex space-x-2">
-            <Button onClick={() => handleUpdateOrderStatus('processing')}>
-              Process Order
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => handleUpdateOrderStatus('cancelled')}
-            >
-              Cancel Order
-            </Button>
-          </div>
-        );
-      case 'processing':
-        return (
-          <div className="flex space-x-2">
-            <Button onClick={() => handleUpdateOrderStatus('shipped')}>
-              Mark as Shipped
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => handleUpdateOrderStatus('cancelled')}
-            >
-              Cancel Order
-            </Button>
-          </div>
-        );
-      case 'shipped':
-        return (
-          <Button onClick={() => handleUpdateOrderStatus('completed')}>
-            Mark as Delivered
-          </Button>
-        );
-      default:
-        return null;
-    }
-  };
+   const getStatusActions = () => {
+     // Convert Vietnamese status to English for comparison
+     const statusMap: Record<string, string> = {
+       'Chờ Xử Lý': 'pending',
+       'Đang Xử Lý': 'processing',
+       'Đang Giao': 'shipped',
+       'Đã Giao': 'delivered',
+       'Hoàn Thành': 'completed',
+       'Đã Hủy': 'cancelled',
+       'Đã Hoàn Tiền': 'refunded'
+     };
+     
+     const currentStatus = statusMap[order.status] || order.status;
+ 
+     switch (currentStatus) {
+       case 'pending':
+         return (
+           <div className="flex space-x-2">
+             <Button onClick={() => handleUpdateOrderStatus('processing')}>
+               Process Order
+             </Button>
+             <Button
+               variant="destructive"
+               onClick={() => handleUpdateOrderStatus('cancelled')}
+             >
+               Cancel Order
+             </Button>
+           </div>
+         );
+       case 'processing':
+         return (
+           <div className="flex space-x-2">
+             <Button onClick={() => handleUpdateOrderStatus('shipped')}>
+               Mark as Shipped
+             </Button>
+             <Button
+               variant="destructive"
+               onClick={() => handleUpdateOrderStatus('cancelled')}
+             >
+               Cancel Order
+             </Button>
+           </div>
+         );
+       case 'shipped':
+         return (
+           <div className="flex space-x-2">
+             <Button onClick={() => handleConfirmDelivery()}>
+               Confirm Delivery
+             </Button>
+             <Button
+               variant="destructive"
+               onClick={() => handleUpdateOrderStatus('cancelled')}
+             >
+               Cancel Order
+             </Button>
+           </div>
+         );
+       case 'delivered':
+         return (
+           <div className="flex space-x-2">
+             <Button onClick={() => handleUpdateOrderStatus('completed')}>
+               Mark as Completed
+             </Button>
+             <Button
+               variant="outline"
+               onClick={() => handleUpdateOrderStatus('shipped')}
+             >
+               Return to Shipped
+             </Button>
+           </div>
+         );
+       default:
+         return null;
+     }
+   };
 
   return (
     <div className="space-y-6">
