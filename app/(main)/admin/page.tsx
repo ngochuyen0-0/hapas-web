@@ -174,22 +174,20 @@ export default function DashboardPage() {
                     </p>
                     <p
                       className={`text-sm ${
-                        order.status === 'Completed'
+                        order.status === 'Hoàn Thành'
                           ? 'text-green-600'
-                          : order.status === 'Processing'
+                          : order.status === 'Đang Xử Lý'
                             ? 'text-yellow-600'
-                            : order.status === 'Shipped'
+                            : order.status === 'Đã Giao'
                               ? 'text-blue-600'
-                              : 'text-gray-600'
+                              : order.status === 'Chờ Xử Lý'
+                                ? 'text-orange-600'
+                                : order.status === 'Đã Hủy'
+                                  ? 'text-red-600'
+                                  : 'text-gray-600'
                       }`}
                     >
-                      {order.status === 'Completed'
-                        ? 'Hoàn Thành'
-                        : order.status === 'Processing'
-                          ? 'Đang Xử Lý'
-                          : order.status === 'Shipped'
-                            ? 'Đã Giao'
-                            : order.status}
+                      {order.status}
                     </p>
                   </div>
                 </div>

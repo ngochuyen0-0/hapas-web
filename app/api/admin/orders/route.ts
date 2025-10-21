@@ -2,6 +2,48 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { verifyAdminToken } from '@/lib/auth';
 
+// Function to translate order status to Vietnamese
+function translateOrderStatusToVietnamese(status: string): string {
+  switch (status.toLowerCase()) {
+    case 'pending':
+      return 'Chờ Xử Lý';
+    case 'processing':
+      return 'Đang Xử Lý';
+    case 'shipped':
+      return 'Đã Giao';
+    case 'completed':
+      return 'Hoàn Thành';
+    case 'cancelled':
+      return 'Đã Hủy';
+    case 'delivered':
+      return 'Đã Giao';
+    case 'refunded':
+      return 'Đã Hoàn Tiền';
+    default:
+      return status; // Return original status if not found in translation
+  }
+}
+
+// Function to translate order status from Vietnamese back to English
+function translateOrderStatusToEnglish(status: string): string {
+  switch (status.trim()) {
+    case 'Chờ Xử Lý':
+      return 'pending';
+    case 'Đang Xử Lý':
+      return 'processing';
+    case 'Đã Giao':
+      return 'delivered';
+    case 'Hoàn Thành':
+      return 'completed';
+    case 'Đã Hủy':
+      return 'cancelled';
+    case 'Đã Hoàn Tiền':
+      return 'refunded';
+    default:
+      return status.toLowerCase(); // Return original status if not found in translation
+ }
+}
+
 export async function GET(request: Request) {
   try {
     // Check if user is authenticated using custom JWT verification
@@ -38,10 +80,16 @@ export async function GET(request: Request) {
         order_date: 'desc',
       },
     });
+    
+    // Translate order statuses to Vietnamese
+    const translatedOrders = orders.map(order => ({
+      ...order,
+      status: translateOrderStatusToVietnamese(order.status),
+    }));
 
     return NextResponse.json({
       success: true,
-      orders,
+      orders: translatedOrders,
     });
   } catch (error) {
     console.error('Error fetching orders:', error);
@@ -75,16 +123,25 @@ export async function PUT(request: Request) {
       );
     }
 
+    // Convert Vietnamese status back to English before saving to database
+    const englishStatus = translateOrderStatusToEnglish(status);
+    
     // Update order status
     const updatedOrder = await prisma.order.update({
       where: { id },
-      data: { status },
+      data: { status: englishStatus },
     });
+    
+    // Translate status back to Vietnamese for response
+    updatedOrder.status = translateOrderStatusToVietnamese(updatedOrder.status);
 
     return NextResponse.json({
       success: true,
       message: 'Order status updated successfully',
-      order: updatedOrder,
+      order: {
+        ...updatedOrder,
+        status: translateOrderStatusToVietnamese(updatedOrder.status),
+      },
     });
   } catch (error) {
     console.error('Error updating order status:', error);
