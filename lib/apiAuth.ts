@@ -78,7 +78,7 @@ export function withCustomerAuth(
 
       // Add customer info to request context
       (req as any).customer = decoded;
-
+      console.log('Authenticated customer:', decoded);
       // Call the handler
       return await handler(req);
     } catch (error: any) {

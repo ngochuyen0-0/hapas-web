@@ -38,7 +38,7 @@ export default function AdminLoginPage() {
       });
 
       const data = await response.json();
-
+      console.log(data);
       if (data.success) {
         // Save token and redirect
         localStorage.setItem('adminToken', data.token);

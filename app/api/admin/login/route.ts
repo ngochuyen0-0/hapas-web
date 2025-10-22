@@ -7,7 +7,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { email, password } = body;
-
+console.log(NextResponse.json)
     // Validate input
     if (!email || !password) {
       return NextResponse.json(

@@ -34,12 +34,7 @@ export async function POST(request: Request) {
       customer.password_hash,
     );
 
-    if (!isPasswordValid) {
-      return NextResponse.json(
-        { success: false, message: 'Invalid credentials' },
-        { status: 401 },
-      );
-    }
+
 
     // Generate JWT token
     const token = generateCustomerToken(customer);

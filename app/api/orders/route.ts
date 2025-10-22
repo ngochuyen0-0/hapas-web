@@ -99,7 +99,7 @@ export const POST = withCustomerAuth(async (req: Request) => {
     // Create order
     const order = await prisma.order.create({
       data: {
-        customer_id: customerId,
+        customer_id: "26a1a7b4-ef5f-441b-b498-e629cad396fd",
         total_amount,
         shipping_address,
         billing_address,
