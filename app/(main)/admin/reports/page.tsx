@@ -156,7 +156,10 @@ export default function ReportsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ${stats.totalRevenue.toFixed(2)}
+              {new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+              }).format(stats.totalRevenue)}
             </div>
             <p className="text-xs text-muted-foreground">
               +15% so với tháng trước
